@@ -1,4 +1,9 @@
-import { useEffect, useState, type MouseEvent as ReactMouseEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import { useCanvasStore } from "../../store/canvasStore";
 
 function TextBox() {
@@ -15,6 +20,8 @@ function TextBox() {
 
   const [tempContent, setTempContent] = useState(textBox.content);
 
+  const mouseLastPosition = useRef({ x: 0, y: 0 });
+
   const handleDoubleClick = () => {
     console.log("double click");
     setIsEditing(true);
@@ -24,6 +31,7 @@ function TextBox() {
   const handleMouseDown = (e: ReactMouseEvent) => {
     if (isEditing) return;
     e.preventDefault();
+    mouseLastPosition.current = { x: e.clientX, y: e.clientY };
     startDrag(e.clientX, e.clientY);
   };
 
@@ -35,18 +43,28 @@ function TextBox() {
   useEffect(() => {
     if (!isDragging) return;
 
+    let animationFrameId: number;
+
+    const animationLoop = () => {
+      updateDrag(mouseLastPosition.current.x, mouseLastPosition.current.y);
+      animationFrameId = requestAnimationFrame(animationLoop);
+    };
+
     const handleMouseMove = (e: MouseEvent) => {
-      updateDrag(e.clientX, e.clientY);
+      mouseLastPosition.current = { x: e.clientX, y: e.clientY };
     };
 
     const handleMouseUp = () => {
       endDrag();
     };
 
+    animationFrameId = requestAnimationFrame(animationLoop);
+
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
 
     return () => {
+      cancelAnimationFrame(animationFrameId);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
@@ -60,10 +78,10 @@ function TextBox() {
           : "border-transparent hover:border-base-300"
       }`}
       style={{
-        left: textBox.transform.x,
-        top: textBox.transform.y,
         width: textBox.transform.width,
         height: textBox.transform.height,
+        transform: `translate(${textBox.transform.x}px, ${textBox.transform.y}px)`,
+        willChange: "transform",
       }}
       onDoubleClick={handleDoubleClick}
       onMouseDown={handleMouseDown}
@@ -73,7 +91,7 @@ function TextBox() {
           value={tempContent}
           onChange={(e) => setTempContent(e.target.value)}
           onBlur={handleEditComplete}
-          className="w-full h-full resize-none border-none outline-none p-2"
+          className="w-full h-full resize-none border-none outline-none"
         />
       ) : (
         <div>{textBox.content}</div>
