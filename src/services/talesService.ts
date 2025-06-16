@@ -1,48 +1,35 @@
+import Dexie, { type Table } from "dexie";
 import type { Tale, TaleCreateData } from "../types";
 
+class AppDatabase extends Dexie {
+  tales!: Table<Tale>;
+
+  constructor() {
+    super("AppDatabase");
+
+    this.version(1).stores({
+      tales: "++id, title, createAt, updatedAt",
+    });
+  }
+}
+
+const db = new AppDatabase();
+
 class TalesStorageService {
-  private readonly STORAGE_KEY = "tales";
-
-  private generateId() {
-    return crypto.randomUUID();
+  async getTales(): Promise<Tale[]> {
+    const tales = await db.tales.orderBy("updatedAt").reverse().toArray();
+    return tales;
   }
 
-  private getStorageData(): Tale[] {
-    const data = localStorage.getItem(this.STORAGE_KEY);
-    if (!data) return [];
-
-    const parsed = JSON.parse(data, (key, value) => {
-      if (key.endsWith("At") && typeof value === "string") {
-        return new Date(value);
-      }
-      return value;
-    });
-
-    return parsed;
-  }
-
-  private saveStorageData(tales: Tale[]): void {
-    const serialized = JSON.stringify(tales, (_, value) => {
-      if (value instanceof Date) {
-        return value.toISOString();
-      }
-      return value;
-    });
-    localStorage.setItem(this.STORAGE_KEY, serialized);
-  }
-
-  createProject(taleCreateData: TaleCreateData): Tale {
+  async createTale(taleCreateData: TaleCreateData): Promise<Tale> {
     const now = new Date();
     const newTale: Tale = {
-      id: this.generateId(),
       title: taleCreateData.title,
       createdAt: now,
       updatedAt: now,
     };
 
-    const tales = this.getStorageData();
-    tales.push(newTale);
-    this.saveStorageData(tales);
+    await db.tales.add(newTale);
 
     return newTale;
   }

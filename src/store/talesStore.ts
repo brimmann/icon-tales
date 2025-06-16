@@ -5,18 +5,26 @@ import { taleStorageService } from "../services/talesService";
 
 interface TalesState {
   tales: Tale[];
-  createTale: (taleCreateData: TaleCreateData) => Tale;
+  getTales: () => Promise<void>;
+  createTale: (taleCreateData: TaleCreateData) => Promise<void>;
 }
 
 export const useTaleStore = create<TalesState>()(
-  devtools((set) => ({
-    tales: [],
-    createTale: (taleCreateData: TaleCreateData) => {
-      const tale = taleStorageService.createProject(taleCreateData);
-      set((state) => ({
-        tales: [tale, ...state.tales],
-      }));
-      return tale;
-    },
-  }))
+  devtools(
+    (set, get) => ({
+      tales: [],
+      getTales: async () => {
+        const tales = await taleStorageService.getTales();
+        set({ tales });
+      },
+      createTale: async (taleCreateData: TaleCreateData) => {
+        const tale = await taleStorageService.createTale(taleCreateData);
+        const curretnTales = get().tales;
+        set({
+          tales: [tale, ...curretnTales],
+        });
+      },
+    }),
+    { name: "talesStore" }
+  )
 );

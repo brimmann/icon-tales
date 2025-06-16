@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slide Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style>
+      .slide-thumbnail {
+        aspect-ratio: 16/9;
+      }
+      .icon-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+        gap: 8px;
+      }
+      @media (max-width: 768px) {
+        .icon-grid {
+          grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 h-screen overflow-hidden">
+    <!-- Main Container -->
+    <div class="flex h-full">
+      <!-- Left Sidebar - Slide Navigation -->
+      <div
+        class="w-64 bg-white border-r border-gray-200 flex flex-col md:w-64 sm:w-48"
+      >
+        <!-- Header -->
+        <div class="p-4 border-b border-gray-200">
+          <h2 class="text-lg font-semibold text-gray-800">Slides</h2>
+          <button
+            class="mt-2 w-full bg-blue-500 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-600 transition-colors"
+          >
+            + New Slide
+          </button>
+        </div>
+
+        <!-- Slide Thumbnails -->
+        <div class="flex-1 overflow-y-auto p-2 space-y-2">
+          <!-- Slide 1 - Active -->
+          <div
+            class="slide-thumbnail bg-blue-100 border-2 border-blue-500 rounded-lg p-2 cursor-pointer hover:bg-blue-50 transition-colors"
+          >
+            <div
+              class="w-full h-full bg-white rounded border flex items-center justify-center"
+            >
+              <span class="text-xs text-gray-500">Slide 1</span>
+            </div>
+            <div class="text-xs text-center mt-1 text-gray-600">1</div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div
+            class="slide-thumbnail bg-gray-100 border border-gray-300 rounded-lg p-2 cursor-pointer hover:bg-gray-50 transition-colors"
+          >
+            <div
+              class="w-full h-full bg-white rounded border flex items-center justify-center"
+            >
+              <span class="text-xs text-gray-500">Slide 2</span>
+            </div>
+            <div class="text-xs text-center mt-1 text-gray-600">2</div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div
+            class="slide-thumbnail bg-gray-100 border border-gray-300 rounded-lg p-2 cursor-pointer hover:bg-gray-50 transition-colors"
+          >
+            <div
+              class="w-full h-full bg-white rounded border flex items-center justify-center"
+            >
+              <span class="text-xs text-gray-500">Slide 3</span>
+            </div>
+            <div class="text-xs text-center mt-1 text-gray-600">3</div>
+          </div>
+
+          <!-- Slide 4 -->
+          <div
+            class="slide-thumbnail bg-gray-100 border border-gray-300 rounded-lg p-2 cursor-pointer hover:bg-gray-50 transition-colors"
+          >
+            <div
+              class="w-full h-full bg-white rounded border flex items-center justify-center"
+            >
+              <span class="text-xs text-gray-500">Slide 4</span>
+            </div>
+            <div class="text-xs text-center mt-1 text-gray-600">4</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col lg:flex-row">
+        <!-- Center - Slide Editor -->
+        <div class="flex-1 bg-gray-100 flex flex-col">
+          <!-- Toolbar -->
+          <div
+            class="bg-white border-b border-gray-200 p-3 flex items-center justify-between"
+          >
+            <div class="flex items-center space-x-4">
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <span class="material-icons text-gray-600">undo</span>
+              </button>
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <span class="material-icons text-gray-600">redo</span>
+              </button>
+              <div class="h-6 w-px bg-gray-300"></div>
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <span class="material-icons text-gray-600">format_bold</span>
+              </button>
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <span class="material-icons text-gray-600">format_italic</span>
+              </button>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="text-sm text-gray-600">100%</span>
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <span class="material-icons text-gray-600">zoom_in</span>
+              </button>
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <span class="material-icons text-gray-600">zoom_out</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Slide Canvas -->
+          <div class="flex-1 p-8 flex items-center justify-center">
+            <div
+              class="bg-white rounded-lg shadow-lg"
+              style="
+                width: 800px;
+                height: 450px;
+                max-width: 90vw;
+                max-height: 60vh;
+              "
+            >
+              <div
+                class="w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center"
+              >
+                <div class="text-center">
+                  <span class="material-icons text-6xl text-gray-400 mb-4 block"
+                    >edit</span
+                  >
+                  <p class="text-gray-500 text-lg">Click to add content</p>
+                  <p class="text-gray-400 text-sm mt-2">Slide editing area</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Sidebar - Icons Panel -->
+        <div
+          class="w-80 bg-white border-l border-gray-200 flex flex-col lg:w-80 md:w-72 sm:w-64"
+        >
+          <!-- Header -->
+          <div class="p-4 border-b border-gray-200">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Icons</h3>
+
+            <!-- Search Bar -->
+            <div class="relative mb-3">
+              <input
+                type="text"
+                placeholder="Search icons..."
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                id="iconSearch"
+              />
+              <span class="material-icons absolute left-3 top-2.5 text-gray-400"
+                >search</span
+              >
+            </div>
+
+            <!-- Sort Options -->
+            <select
+              class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              id="sortOptions"
+            >
+              <option value="alphabetical">Alphabetical</option>
+              <option value="category">Category</option>
+              <option value="recent">Recently Used</option>
+            </select>
+          </div>
+
+          <!-- Icons Grid -->
+          <div class="flex-1 overflow-y-auto p-4">
+            <div class="icon-grid" id="iconGrid">
+              <!-- Material Icons will be populated here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Toggle (hidden on desktop) -->
+    <button
+      class="lg:hidden fixed top-4 right-4 z-50 bg-blue-500 text-white p-2 rounded-full shadow-lg"
+      id="mobileMenuToggle"
+    >
+      <span class="material-icons">menu</span>
+    </button>
+
+    <script>
+      // Sample Material Icons
+      const materialIcons = [
+        "home",
+        "search",
+        "settings",
+        "account_circle",
+        "favorite",
+        "star",
+        "bookmark",
+        "help",
+        "info",
+        "language",
+        "lock",
+        "email",
+        "phone",
+        "location_on",
+        "calendar_today",
+        "photo",
+        "music_note",
+        "video_call",
+        "chat",
+        "notifications",
+        "shopping_cart",
+        "payment",
+        "work",
+        "school",
+        "local_dining",
+        "local_hospital",
+        "directions_car",
+        "flight",
+        "hotel",
+        "restaurant",
+        "add",
+        "remove",
+        "edit",
+        "delete",
+        "save",
+        "download",
+        "upload",
+        "share",
+        "print",
+        "copy",
+        "cut",
+        "paste",
+        "undo",
+        "redo",
+        "refresh",
+        "visibility",
+        "visibility_off",
+        "volume_up",
+        "volume_off",
+        "brightness_high",
+        "brightness_low",
+        "wifi",
+        "bluetooth",
+        "battery_full",
+        "signal_cellular_4_bar",
+      ];
+
+      // Populate icons grid
+      function populateIcons(icons = materialIcons) {
+        const iconGrid = document.getElementById("iconGrid");
+        iconGrid.innerHTML = "";
+
+        icons.forEach((icon) => {
+          const iconElement = document.createElement("div");
+          iconElement.className =
+            "p-2 hover:bg-gray-100 rounded cursor-pointer flex items-center justify-center transition-colors";
+          iconElement.innerHTML = `<span class="material-icons text-gray-600 hover:text-blue-600" title="${icon}">${icon}</span>`;
+          iconElement.addEventListener("click", () => {
+            // Handle icon selection
+            console.log("Selected icon:", icon);
+          });
+          iconGrid.appendChild(iconElement);
+        });
+      }
+
+      // Search functionality
+      document
+        .getElementById("iconSearch")
+        .addEventListener("input", function (e) {
+          const searchTerm = e.target.value.toLowerCase();
+          const filteredIcons = materialIcons.filter((icon) =>
+            icon.toLowerCase().includes(searchTerm)
+          );
+          populateIcons(filteredIcons);
+        });
+
+      // Sort functionality
+      document
+        .getElementById("sortOptions")
+        .addEventListener("change", function (e) {
+          let sortedIcons = [...materialIcons];
+
+          switch (e.target.value) {
+            case "alphabetical":
+              sortedIcons.sort();
+              break;
+            case "category":
+              // Simple category sort (would need more complex logic in real app)
+              sortedIcons.sort();
+              break;
+            case "recent":
+              // Would use actual usage data in real app
+              sortedIcons.reverse();
+              break;
+          }
+
+          populateIcons(sortedIcons);
+        });
+
+      // Mobile menu toggle
+      document
+        .getElementById("mobileMenuToggle")
+        .addEventListener("click", function () {
+          // Toggle mobile menu visibility
+          const rightSidebar = document.querySelector(".w-80");
+          rightSidebar.classList.toggle("hidden");
+        });
+
+      // Slide selection functionality
+      document.querySelectorAll(".slide-thumbnail").forEach((slide, index) => {
+        slide.addEventListener("click", function () {
+          // Remove active state from all slides
+          document.querySelectorAll(".slide-thumbnail").forEach((s) => {
+            s.classList.remove("bg-blue-100", "border-blue-500");
+            s.classList.add("bg-gray-100", "border-gray-300");
+          });
+
+          // Add active state to clicked slide
+          this.classList.remove("bg-gray-100", "border-gray-300");
+          this.classList.add("bg-blue-100", "border-blue-500");
+
+          console.log("Selected slide:", index + 1);
+        });
+      });
+
+      // Initialize
+      populateIcons();
+    </script>
+  </body>
+</html>

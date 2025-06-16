@@ -1,23 +1,22 @@
+import { useEffect } from "react";
+import { useTaleStore } from "../../store/talesStore";
 import TaleItem from "./TaleItem";
 
 function TalesList() {
-  const taleTitles = [
-    "The Enchanted Forest",
-    "The Last Dragon",
-    "Whispers of the Old Mill",
-    "The Secret of Starfall Mountain",
-    "Chronicles of the Moonlit Shore",
-    "The Weaver's Dream",
-    "Echoes in the Stone",
-    "The Crimson Rose Prophecy",
-    "Beneath the Sleeping City",
-    "The Voyage of the Stardust Mariner",
-  ];
+  const getTales = useTaleStore((state) => state.getTales);
 
+  useEffect(() => {
+    const loadData = async () => {
+      await getTales();
+    };
+    loadData();
+  }, [getTales]);
+
+  const tales = useTaleStore((state) => state.tales);
   return (
     <div>
-      {taleTitles.map((title, index) => (
-        <TaleItem key={index} tale={title} />
+      {tales.map((tale) => (
+        <TaleItem key={tale.id} tale={tale.title} />
       ))}
     </div>
   );

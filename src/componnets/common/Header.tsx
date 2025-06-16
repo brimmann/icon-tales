@@ -1,15 +1,28 @@
-// import { useState } from "react";
 function Header() {
-  //   const [themeMode, setThemeMode] = useState("light");
   return (
-    <div className="navbar bg-base-100 shadow-sm px-2 lg:px-16">
-      <div className="flex-1">
+    <div className="navbar bg-base-100 shadow-sm px-2 lg:px-16 justify-between">
+      <div className="">
         <a className="btn btn-ghost text-xl">IconTales</a>
       </div>
+
       <div className="flex-none">
         <label className="toggle text-base-content">
-          <input type="checkbox" value="light" className="theme-controller" />
-
+          <input type="checkbox" value="dark" className="theme-controller" />
+          <svg
+            aria-label="moon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+          >
+            <g
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              strokeWidth="2"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </g>
+          </svg>
           <svg
             aria-label="sun"
             xmlns="http://www.w3.org/2000/svg"
@@ -31,22 +44,6 @@ function Header() {
               <path d="M20 12h2"></path>
               <path d="m6.34 17.66-1.41 1.41"></path>
               <path d="m19.07 4.93-1.41 1.41"></path>
-            </g>
-          </svg>
-
-          <svg
-            aria-label="moon"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
             </g>
           </svg>
         </label>

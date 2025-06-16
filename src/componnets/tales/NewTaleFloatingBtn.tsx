@@ -1,16 +1,25 @@
-import { useTaleStore } from "../../store/talesStore";
+// import { useTaleStore } from "../../store/talesStore";
 
-const NewTaleFloatingBtn = () => {
-  const createTale = useTaleStore((state) => state.createTale);
-  const handleCreateTale = () => {
-    // Handle creating a new tale here
-    console.log("Creating a new tale...");
-    createTale({ title: "some title 2" });
-  };
+interface NewTaleFloatingBtnProps {
+  onOpen: () => void;
+}
+
+const NewTaleFloatingBtn = ({ onOpen }: NewTaleFloatingBtnProps) => {
+  // const createTale = useTaleStore((state) => state.createTale);
+  // const handleCreateTale = () => {
+  //   // Handle creating a new tale here
+  //   console.log("Creating a new tale...");
+  //   // createTale({ title: "some title 2" })
+  //   // const modal = document.getElementById("my_modal_1") as HTMLDialogElement;
+  //   // if (modal) {
+  //   //   modal.showModal();
+  //   // }
+
+  // };
 
   return (
     <button
-      onClick={handleCreateTale}
+      onClick={onOpen}
       className="btn btn-primary btn-circle btn-lg fixed bottom-6 right-6 lg: z-50"
       aria-label="Create new tale"
     >

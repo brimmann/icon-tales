@@ -6,9 +6,9 @@ interface MainLayoutProps {
 }
 function MainLayout({ children }: MainLayoutProps) {
   return (
-    <div>
+    <div className="h-dvh flex flex-col">
       <Header />
-      <main>{children}</main>
+      <main className="min-h-0 flex-1">{children}</main>
     </div>
   );
 }

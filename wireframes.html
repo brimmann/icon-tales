@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Slides Editor Wireframes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style>
+      .wireframe-box {
+        border: 2px dashed #e5e7eb;
+      }
+      .slide-canvas {
+        aspect-ratio: 16/9;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50">
+    <!-- Design Selector -->
+    <div class="fixed top-4 left-4 z-50 bg-white rounded-lg shadow-lg p-4">
+      <h3 class="font-semibold text-sm mb-2">Choose Design:</h3>
+      <div class="space-y-1">
+        <button
+          onclick="showDesign(1)"
+          class="design-btn block w-full text-left px-3 py-1 rounded text-sm hover:bg-gray-100"
+          data-design="1"
+        >
+          1. Top Toolbar + Left Slides
+        </button>
+        <button
+          onclick="showDesign(2)"
+          class="design-btn block w-full text-left px-3 py-1 rounded text-sm hover:bg-gray-100"
+          data-design="2"
+        >
+          2. Floating Toolbar + Bottom Slides
+        </button>
+        <button
+          onclick="showDesign(3)"
+          class="design-btn block w-full text-left px-3 py-1 rounded text-sm hover:bg-gray-100"
+          data-design="3"
+        >
+          3. Split Panels + Right Slides
+        </button>
+        <button
+          onclick="showDesign(4)"
+          class="design-btn block w-full text-left px-3 py-1 rounded text-sm hover:bg-gray-100"
+          data-design="4"
+        >
+          4. Minimal Top Bar + Left Drawer
+        </button>
+        <button
+          onclick="showDesign(5)"
+          class="design-btn block w-full text-left px-3 py-1 rounded text-sm hover:bg-gray-100"
+          data-design="5"
+        >
+          5. Command Palette + Grid View
+        </button>
+      </div>
+    </div>
+
+    <!-- Design 1: Top Toolbar + Left Slides -->
+    <div id="design1" class="design-container">
+      <div class="h-screen flex flex-col">
+        <!-- Top Toolbar -->
+        <header
+          class="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between"
+        >
+          <div class="flex items-center space-x-4">
+            <h1 class="font-semibold text-lg">Presentation Editor</h1>
+            <div class="hidden md:flex items-center space-x-1">
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <i class="material-icons text-lg">undo</i>
+              </button>
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <i class="material-icons text-lg">redo</i>
+              </button>
+              <div class="w-px h-6 bg-gray-300 mx-2"></div>
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <i class="material-icons text-lg">format_bold</i>
+              </button>
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <i class="material-icons text-lg">format_italic</i>
+              </button>
+              <button class="p-2 hover:bg-gray-100 rounded">
+                <i class="material-icons text-lg">format_underlined</i>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">
+              Share
+            </button>
+            <button class="p-2 hover:bg-gray-100 rounded">
+              <i class="material-icons">more_vert</i>
+            </button>
+          </div>
+        </header>
+
+        <div class="flex-1 flex">
+          <!-- Left Sidebar - Slides -->
+          <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
+            <div class="p-3 border-b border-gray-200">
+              <button
+                class="w-full flex items-center justify-center py-2 border-2 border-dashed border-gray-300 rounded text-sm text-gray-600 hover:border-gray-400"
+              >
+                <i class="material-icons mr-2">add</i>New Slide
+              </button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-2 space-y-2">
+              <div class="wireframe-box bg-blue-50 border-blue-300 rounded p-2">
+                <div class="slide-canvas bg-white rounded shadow-sm mb-1"></div>
+                <div class="text-xs text-center text-gray-600">Slide 1</div>
+              </div>
+              <div class="wireframe-box rounded p-2">
+                <div class="slide-canvas bg-white rounded shadow-sm mb-1"></div>
+                <div class="text-xs text-center text-gray-600">Slide 2</div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Main Canvas -->
+          <main class="flex-1 flex flex-col">
+            <div
+              class="flex-1 flex items-center justify-center p-8 bg-gray-100"
+            >
+              <div
+                class="wireframe-box bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full"
+              >
+                <div
+                  class="slide-canvas bg-gray-50 rounded flex items-center justify-center"
+                >
+                  <div class="text-gray-400">
+                    <i class="material-icons text-6xl">slideshow</i>
+                    <p class="text-center mt-2">Slide Content Area</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </main>
+
+          <!-- Right Sidebar - Properties -->
+          <aside class="w-72 bg-white border-l border-gray-200 hidden lg:block">
+            <div class="p-4">
+              <h3 class="font-semibold mb-3">Text Formatting</h3>
+              <div class="space-y-3">
+                <div class="wireframe-box rounded p-3">
+                  <div class="text-sm text-gray-600">Font Controls</div>
+                </div>
+                <div class="wireframe-box rounded p-3">
+                  <div class="text-sm text-gray-600">Color & Style</div>
+                </div>
+              </div>
+
+              <h3 class="font-semibold mt-6 mb-3">Icons</h3>
+              <div class="wireframe-box rounded p-3">
+                <div class="grid grid-cols-6 gap-2">
+                  <div
+                    class="aspect-square bg-gray-200 rounded flex items-center justify-center"
+                  >
+                    <i class="material-icons text-sm">star</i>
+                  </div>
+                  <div
+                    class="aspect-square bg-gray-200 rounded flex items-center justify-center"
+                  >
+                    <i class="material-icons text-sm">favorite</i>
+                  </div>
+                  <div
+                    class="aspect-square bg-gray-200 rounded flex items-center justify-center"
+                  >
+                    <i class="material-icons text-sm">home</i>
+                  </div>
+                  <div
+                    class="aspect-square bg-gray-200 rounded flex items-center justify-center"
+                  >
+                    <i class="material-icons text-sm">search</i>
+                  </div>
+                  <div
+                    class="aspect-square bg-gray-200 rounded flex items-center justify-center"
+                  >
+                    <i class="material-icons text-sm">settings</i>
+                  </div>
+                  <div
+                    class="aspect-square bg-gray-200 rounded flex items-center justify-center"
+                  >
+                    <i class="material-icons text-sm">add</i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design 2: Floating Toolbar + Bottom Slides -->
+    <div id="design2" class="design-container hidden">
+      <div class="h-screen flex flex-col">
+        <!-- Minimal Header -->
+        <header
+          class="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between"
+        >
+          <h1 class="font-semibold text-lg">Editor</h1>
+          <div class="flex items-center space-x-2">
+            <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">
+              Share
+            </button>
+          </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 relative">
+          <!-- Canvas -->
+          <div class="h-full flex items-center justify-center p-8 bg-gray-100">
+            <div
+              class="wireframe-box bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full"
+            >
+              <div
+                class="slide-canvas bg-gray-50 rounded flex items-center justify-center"
+              >
+                <div class="text-gray-400">
+                  <i class="material-icons text-6xl">slideshow</i>
+                  <p class="text-center mt-2">Slide Content Area</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Floating Toolbar -->
+          <div
+            class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-white rounded-full shadow-lg px-4 py-2 flex items-center space-x-1"
+          >
+            <button class="p-2 hover:bg-gray-100 rounded-full">
+              <i class="material-icons text-lg">text_fields</i>
+            </button>
+            <button class="p-2 hover:bg-gray-100 rounded-full">
+              <i class="material-icons text-lg">format_bold</i>
+            </button>
+            <button class="p-2 hover:bg-gray-100 rounded-full">
+              <i class="material-icons text-lg">format_italic</i>
+            </button>
+            <div class="w-px h-6 bg-gray-300"></div>
+            <button class="p-2 hover:bg-gray-100 rounded-full">
+              <i class="material-icons text-lg">add_circle</i>
+            </button>
+            <button class="p-2 hover:bg-gray-100 rounded-full">
+              <i class="material-icons text-lg">palette</i>
+            </button>
+          </div>
+
+          <!-- Side Panel Toggle -->
+          <button
+            class="absolute top-4 right-4 bg-white rounded-lg shadow-lg p-2 hover:bg-gray-50"
+          >
+            <i class="material-icons">tune</i>
+          </button>
+        </div>
+
+        <!-- Bottom Slides Strip -->
+        <div class="bg-white border-t border-gray-200 p-3">
+          <div class="flex items-center space-x-3 overflow-x-auto">
+            <button
+              class="flex-shrink-0 p-2 border-2 border-dashed border-gray-300 rounded hover:border-gray-400"
+            >
+              <i class="material-icons">add</i>
+            </button>
+            <div class="flex space-x-2">
+              <div
+                class="wireframe-box bg-blue-50 border-blue-300 rounded p-2 w-32"
+              >
+                <div class="aspect-video bg-white rounded shadow-sm mb-1"></div>
+                <div class="text-xs text-center text-gray-600">Slide 1</div>
+              </div>
+              <div class="wireframe-box rounded p-2 w-32">
+                <div class="aspect-video bg-white rounded shadow-sm mb-1"></div>
+                <div class="text-xs text-center text-gray-600">Slide 2</div>
+              </div>
+              <div class="wireframe-box rounded p-2 w-32">
+                <div class="aspect-video bg-white rounded shadow-sm mb-1"></div>
+                <div class="text-xs text-center text-gray-600">Slide 3</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design 3: Split Panels + Right Slides -->
+    <div id="design3" class="design-container hidden">
+      <div class="h-screen flex">
+        <!-- Left Panel - Tools -->
+        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
+          <div class="p-4 border-b border-gray-200">
+            <h2 class="font-semibold">Tools</h2>
+          </div>
+
+          <div class="flex-1 overflow-y-auto p-4 space-y-4">
+            <div>
+              <h3 class="text-sm font-medium mb-2">Text</h3>
+              <div class="wireframe-box rounded p-3 space-y-2">
+                <div class="flex space-x-1">
+                  <button class="flex-1 p-1 bg-gray-100 rounded text-xs">
+                    B
+                  </button>
+                  <button class="flex-1 p-1 bg-gray-100 rounded text-xs">
+                    I
+                  </button>
+                  <button class="flex-1 p-1 bg-gray-100 rounded text-xs">
+                    U
+                  </button>
+                </div>
+                <div class="h-8 bg-gray-100 rounded"></div>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-medium mb-2">Icons</h3>
+              <div class="wireframe-box rounded p-3">
+                <div class="grid grid-cols-4 gap-2">
+                  <button
+                    class="aspect-square bg-gray-100 rounded flex items-center justify-center"
+                  >
+                    <i class="material-icons text-sm">star</i>
+                  </button>
+                  <button
+                    class="aspect-square bg-gray-100 rounded flex items-center justify-center"
+                  >
+                    <i class="material-icons text-sm">home</i>
+                  </button>
+                  <button
+                    class="aspect-square bg-gray-100 rounded flex items-center justify-center"
+                  >
+                    <i class="material-icons text-sm">favorite</i>
+                  </button>
+                  <button
+                    class="aspect-square bg-gray-100 rounded flex items-center justify-center"
+                  >
+                    <i class="material-icons text-sm">settings</i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Main Canvas -->
+        <main class="flex-1 flex flex-col">
+          <header
+            class="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between"
+          >
+            <div class="flex items-center space-x-4">
+              <h1 class="font-semibold">Untitled Presentation</h1>
+              <div class="hidden md:flex items-center space-x-1">
+                <button class="p-1 hover:bg-gray-100 rounded">
+                  <i class="material-icons text-lg">undo</i>
+                </button>
+                <button class="p-1 hover:bg-gray-100 rounded">
+                  <i class="material-icons text-lg">redo</i>
+                </button>
+              </div>
+            </div>
+            <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">
+              Share
+            </button>
+          </header>
+
+          <div class="flex-1 flex items-center justify-center p-8 bg-gray-100">
+            <div
+              class="wireframe-box bg-white rounded-lg shadow-lg p-8 max-w-3xl w-full"
+            >
+              <div
+                class="slide-canvas bg-gray-50 rounded flex items-center justify-center"
+              >
+                <div class="text-gray-400">
+                  <i class="material-icons text-6xl">slideshow</i>
+                  <p class="text-center mt-2">Slide Content</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Right Panel - Slides -->
+        <aside class="w-56 bg-white border-l border-gray-200 flex flex-col">
+          <div class="p-3 border-b border-gray-200">
+            <button
+              class="w-full flex items-center justify-center py-2 border-2 border-dashed border-gray-300 rounded text-sm text-gray-600"
+            >
+              <i class="material-icons mr-1 text-base">add</i>Add
+            </button>
+          </div>
+          <div class="flex-1 overflow-y-auto p-2 space-y-2">
+            <div class="wireframe-box bg-blue-50 border-blue-300 rounded p-2">
+              <div class="slide-canvas bg-white rounded shadow-sm mb-1"></div>
+              <div class="text-xs text-center text-gray-600">1</div>
+            </div>
+            <div class="wireframe-box rounded p-2">
+              <div class="slide-canvas bg-white rounded shadow-sm mb-1"></div>
+              <div class="text-xs text-center text-gray-600">2</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- Design 4: Minimal Top Bar + Left Drawer -->
+    <div id="design4" class="design-container hidden">
+      <div class="h-screen flex flex-col">
+        <!-- Minimal Header -->
+        <header
+          class="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between"
+        >
+          <div class="flex items-center space-x-3">
+            <button class="p-2 hover:bg-gray-100 rounded lg:hidden">
+              <i class="material-icons">menu</i>
+            </button>
+            <h1 class="font-semibold text-lg">Editor</h1>
+          </div>
+          <div class="flex items-center space-x-2">
+            <div class="hidden md:flex items-center space-x-1">
+              <button class="p-1 hover:bg-gray-100 rounded">
+                <i class="material-icons">undo</i>
+              </button>
+              <button class="p-1 hover:bg-gray-100 rounded">
+                <i class="material-icons">redo</i>
+              </button>
+            </div>
+            <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">
+              Share
+            </button>
+          </div>
+        </header>
+
+        <div class="flex-1 flex relative">
+          <!-- Collapsible Left Drawer -->
+          <aside
+            class="w-80 bg-white border-r border-gray-200 flex flex-col transform transition-transform lg:translate-x-0"
+          >
+            <!-- Tabs -->
+            <div class="flex border-b border-gray-200">
+              <button
+                class="flex-1 py-2 px-3 text-sm border-b-2 border-blue-600 text-blue-600"
+              >
+                Slides
+              </button>
+              <button
+                class="flex-1 py-2 px-3 text-sm text-gray-600 hover:text-gray-800"
+              >
+                Format
+              </button>
+              <button
+                class="flex-1 py-2 px-3 text-sm text-gray-600 hover:text-gray-800"
+              >
+                Icons
+              </button>
+            </div>
+
+            <!-- Slides Tab Content -->
+            <div class="flex-1 flex flex-col">
+              <div class="p-3 border-b border-gray-200">
+                <button
+                  class="w-full flex items-center justify-center py-2 border-2 border-dashed border-gray-300 rounded text-sm text-gray-600"
+                >
+                  <i class="material-icons mr-2">add</i>New Slide
+                </button>
+              </div>
+              <div class="flex-1 overflow-y-auto p-3 space-y-3">
+                <div
+                  class="wireframe-box bg-blue-50 border-blue-300 rounded p-3"
+                >
+                  <div
+                    class="slide-canvas bg-white rounded shadow-sm mb-2"
+                  ></div>
+                  <div class="text-sm font-medium text-center">Slide 1</div>
+                </div>
+                <div class="wireframe-box rounded p-3">
+                  <div
+                    class="slide-canvas bg-white rounded shadow-sm mb-2"
+                  ></div>
+                  <div class="text-sm text-center text-gray-600">Slide 2</div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Main Canvas -->
+          <main class="flex-1 flex items-center justify-center p-8 bg-gray-100">
+            <div
+              class="wireframe-box bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full"
+            >
+              <div
+                class="slide-canvas bg-gray-50 rounded flex items-center justify-center"
+              >
+                <div class="text-gray-400">
+                  <i class="material-icons text-6xl">slideshow</i>
+                  <p class="text-center mt-2">Slide Canvas</p>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <!-- Design 5: Command Palette + Grid View -->
+    <div id="design5" class="design-container hidden">
+      <div class="h-screen flex flex-col">
+        <!-- Clean Header -->
+        <header
+          class="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-between"
+        >
+          <h1 class="font-semibold text-lg">Presentation</h1>
+          <div class="flex items-center space-x-2">
+            <button
+              class="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50"
+            >
+              <i class="material-icons text-sm mr-1">search</i>Commands
+            </button>
+            <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">
+              Share
+            </button>
+          </div>
+        </header>
+
+        <div class="flex-1 flex">
+          <!-- Slides Grid (Left) -->
+          <aside class="w-80 bg-white border-r border-gray-200 p-4">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="font-semibold">Slides</h2>
+              <button class="p-1 hover:bg-gray-100 rounded">
+                <i class="material-icons">add</i>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div class="wireframe-box bg-blue-50 border-blue-300 rounded p-2">
+                <div class="aspect-video bg-white rounded shadow-sm mb-2"></div>
+                <div class="text-xs text-center font-medium">Slide 1</div>
+              </div>
+              <div
+                class="wireframe-box rounded p-2 hover:bg-gray-50 cursor-pointer"
+              >
+                <div class="aspect-video bg-white rounded shadow-sm mb-2"></div>
+                <div class="text-xs text-center text-gray-600">Slide 2</div>
+              </div>
+              <div
+                class="wireframe-box rounded p-2 hover:bg-gray-50 cursor-pointer"
+              >
+                <div class="aspect-video bg-white rounded shadow-sm mb-2"></div>
+                <div class="text-xs text-center text-gray-600">Slide 3</div>
+              </div>
+              <div
+                class="wireframe-box border-dashed rounded p-2 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
+              >
+                <div class="text-center text-gray-400">
+                  <i class="material-icons text-2xl">add</i>
+                  <div class="text-xs mt-1">New</div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Main Area -->
+          <main class="flex-1 flex flex-col">
+            <!-- Context Toolbar -->
+            <div class="bg-white border-b border-gray-200 px-4 py-2">
+              <div class="flex items-center space-x-4 text-sm text-gray-600">
+                <span>Slide 1 of 3</span>
+                <div class="flex items-center space-x-1">
+                  <button class="p-1 hover:bg-gray-100 rounded">
+                    <i class="material-icons text-lg">zoom_out</i>
+                  </button>
+                  <span class="px-2">100%</span>
+                  <button class="p-1 hover:bg-gray-100 rounded">
+                    <i class="material-icons text-lg">zoom_in</i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Canvas -->
+            <div
+              class="flex-1 flex items-center justify-center p-8 bg-gray-100"
+            >
+              <div
+                class="wireframe-box bg-white rounded-lg shadow-lg p-8 max-w-4xl w-full"
+              >
+                <div
+                  class="slide-canvas bg-gray-50 rounded flex items-center justify-center"
+                >
+                  <div class="text-gray-400">
+                    <i class="material-icons text-6xl">slideshow</i>
+                    <p class="text-center mt-2">Slide Editor</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Actions Bar -->
+            <div class="bg-white border-t border-gray-200 p-3">
+              <div class="flex items-center justify-center space-x-4">
+                <button
+                  class="flex items-center space-x-2 px-3 py-2 hover:bg-gray-100 rounded"
+                >
+                  <i class="material-icons">text_fields</i>
+                  <span class="text-sm">Add Text</span>
+                </button>
+                <button
+                  class="flex items-center space-x-2 px-3 py-2 hover:bg-gray-100 rounded"
+                >
+                  <i class="material-icons">add_circle</i>
+                  <span class="text-sm">Add Icon</span>
+                </button>
+                <button
+                  class="flex items-center space-x-2 px-3 py-2 hover:bg-gray-100 rounded"
+                >
+                  <i class="material-icons">palette</i>
+                  <span class="text-sm">Format</span>
+                </button>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let currentDesign = 1;
+
+      function showDesign(designNumber) {
+        // Hide all designs
+        document
+          .querySelectorAll(".design-container")
+          .forEach((el) => el.classList.add("hidden"));
+
+        // Show selected design
+        document
+          .getElementById(`design${designNumber}`)
+          .classList.remove("hidden");
+
+        // Update button states
+        document.querySelectorAll(".design-btn").forEach((btn) => {
+          btn.classList.remove("bg-blue-100", "text-blue-800");
+          btn.classList.add("hover:bg-gray-100");
+        });
+
+        // Highlight active button
+        const activeBtn = document.querySelector(
+          `[data-design="${designNumber}"]`
+        );
+        activeBtn.classList.add("bg-blue-100", "text-blue-800");
+        activeBtn.classList.remove("hover:bg-gray-100");
+
+        currentDesign = designNumber;
+      }
+
+      // Initialize first design
+      showDesign(1);
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (e) => {
+        if (e.key >= "1" && e.key <= "5") {
+          showDesign(parseInt(e.key));
+        }
+      });
+    </script>
+  </body>
+</html>
