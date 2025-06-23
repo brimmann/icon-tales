@@ -1,10 +1,6 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type MouseEvent as ReactMouseEvent,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCanvasStore } from "../../store/canvasStore";
+import type { NativeDragEvent } from "../../types";
 
 function TextBox() {
   const isEditing = useCanvasStore((state) => state.isEditing);
@@ -21,24 +17,47 @@ function TextBox() {
   const [tempContent, setTempContent] = useState(textBox.content);
 
   const mouseLastPosition = useRef({ x: 0, y: 0 });
+  const textBoxRef = useRef<HTMLDivElement>(null);
 
-  const handleDoubleClick = () => {
-    console.log("double click");
-    setIsEditing(true);
-    setTempContent(textBox.content);
+  const getCoords = (e: NativeDragEvent): { x: number; y: number } => {
+    if ("touches" in e) {
+      return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    return { x: e.clientX, y: e.clientY };
   };
 
-  const handleMouseDown = (e: ReactMouseEvent) => {
-    if (isEditing) return;
-    e.preventDefault();
-    mouseLastPosition.current = { x: e.clientX, y: e.clientY };
-    startDrag(e.clientX, e.clientY);
+  const handleDoubleClick = () => {
+    setIsEditing(true);
+    setTempContent(textBox.content);
   };
 
   const handleEditComplete = () => {
     updateTextContent(tempContent);
     setIsEditing(false);
   };
+
+  useEffect(() => {
+    const handleStartDrag = (e: NativeDragEvent) => {
+      console.log("Event attached!");
+      if (isEditing) return;
+      e.preventDefault();
+      const { x, y } = getCoords(e);
+      mouseLastPosition.current = { x: x, y: y };
+      startDrag(x, y);
+    };
+
+    if (!textBoxRef.current) return;
+
+    textBoxRef.current.addEventListener("mousedown", handleStartDrag);
+    textBoxRef.current.addEventListener("touchstart", handleStartDrag, {
+      passive: false,
+    });
+
+    return () => {
+      window.removeEventListener("mousedown", handleStartDrag);
+      window.removeEventListener("touchstart", handleStartDrag);
+    };
+  }, [isEditing, startDrag]);
 
   useEffect(() => {
     if (!isDragging) return;
@@ -50,23 +69,28 @@ function TextBox() {
       animationFrameId = requestAnimationFrame(animationLoop);
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseLastPosition.current = { x: e.clientX, y: e.clientY };
+    const handleDragMove = (e: NativeDragEvent) => {
+      mouseLastPosition.current = getCoords(e);
     };
 
-    const handleMouseUp = () => {
+    const handleDragEnd = () => {
       endDrag();
     };
 
     animationFrameId = requestAnimationFrame(animationLoop);
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mousemove", handleDragMove);
+    window.addEventListener("touchmove", handleDragMove);
+    window.addEventListener("mouseup", handleDragEnd);
+    window.addEventListener("touchend", handleDragEnd);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+
+      window.removeEventListener("mousemove", handleDragMove);
+      window.removeEventListener("touchmove", handleDragMove);
+      window.removeEventListener("mouseup", handleDragEnd);
+      window.removeEventListener("touchend", handleDragEnd);
     };
   }, [isDragging, updateDrag, endDrag]);
 
@@ -74,8 +98,8 @@ function TextBox() {
     <div
       className={`absolute border-2 cursor-move select-none  ${
         isDragging
-          ? "border-primary shadow-lg scale-105"
-          : "border-transparent hover:border-base-300"
+          ? "border-primary"
+          : "border-transparent hover:border-base-300 transition-transform duration-150"
       }`}
       style={{
         width: textBox.transform.width,
@@ -84,7 +108,7 @@ function TextBox() {
         willChange: "transform",
       }}
       onDoubleClick={handleDoubleClick}
-      onMouseDown={handleMouseDown}
+      ref={textBoxRef}
     >
       {isEditing ? (
         <textarea

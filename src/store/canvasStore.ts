@@ -21,8 +21,8 @@ export const useCanvasStore = create<CanvasState>()(
       textBox: {
         content: "Click to edit text.",
         transform: {
-          x: 200,
-          y: 150,
+          x: 10,
+          y: 10,
           width: 200,
           height: 60,
         },
