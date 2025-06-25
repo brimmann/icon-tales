@@ -15,6 +15,7 @@ export interface Transform {
 }
 
 export interface TextBoxEntity {
+  id: number;
   content: string;
   transform: Transform;
 }

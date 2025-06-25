@@ -1,9 +1,12 @@
-import Canvas from "./Canvas";
+import CanvasDnd from "./CanvasDnd";
 
 function CanvasCard() {
   return (
-    <div className="card shadow-sm aspect-video w-11/12 max-w-[880px] bg-white">
-      <Canvas />
+    <div
+      id="canvas-card"
+      className=" shadow-sm aspect-video w-11/12 max-w-[880px] bg-white overflow-hidden cursor-grab"
+    >
+      <CanvasDnd />
     </div>
   );
 }

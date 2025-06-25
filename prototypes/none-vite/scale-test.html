@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fit Child to Parent Demo</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* A simple font for the demo */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* We add a transition to the child for smooth resizing */
+      #child-element {
+        transition: transform 0.1s linear;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen p-4"
+  >
+    <div class="text-center mb-6">
+      <h1 class="text-2xl md:text-3xl font-bold">
+        Responsive Child Scaling Demo
+      </h1>
+      <p class="text-gray-400">Resize the browser window to see the effect.</p>
+    </div>
+
+    <!-- 
+      Parent Container:
+      - It's responsive (`w-11/12`) with a max-width.
+      - `aspect-video` forces a 16:9 aspect ratio.
+      - `overflow-hidden` is crucial to contain the scaled child.
+      - `border` helps visualize the parent's boundaries.
+    -->
+    <div
+      id="parent-container"
+      class="card aspect-video w-11/12 max-w-[880px] bg-gray-800 overflow-hidden rounded-xl border-2 border-dashed border-gray-600 shadow-2xl"
+    >
+      <!-- 
+        Child Element:
+        - It has a fixed, large resolution of 1920x1080.
+        - The `origin-top-left` class ensures scaling happens from the top-left corner.
+        - The `transform` will be applied dynamically by JavaScript.
+      -->
+      <div
+        id="child-element"
+        class="relative w-[1920px] h-[1080px] origin-top-left bg-gradient-to-br from-indigo-500 to-purple-600"
+      >
+        <!-- Content inside the child to demonstrate scaling -->
+        <div class="p-20 flex flex-col justify-between h-full">
+          <div>
+            <h2 class="text-9xl font-bold tracking-tighter">
+              1920x1080 Content
+            </h2>
+            <p class="text-5xl text-indigo-200 mt-4">
+              This child element is being scaled to fit.
+            </p>
+          </div>
+          <div
+            id="scale-info"
+            class="text-6xl font-mono bg-black bg-opacity-50 p-6 rounded-lg self-start"
+          >
+            Scale: 1.000
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Select the elements from the DOM
+      const parentContainer = document.getElementById("parent-container");
+      const childElement = document.getElementById("child-element");
+      const scaleInfo = document.getElementById("scale-info");
+
+      // Define the original, unscaled dimensions of the child
+      const childOriginalWidth = 1920;
+
+      function fitChildToParent() {
+        // Get the current actual width of the parent container
+        const parentWidth = parentContainer.getBoundingClientRect().width;
+
+        // If the parent has no width (e.g., it's hidden), do nothing to avoid errors.
+        if (parentWidth === 0) {
+          return;
+        }
+
+        // Calculate the required scale factor.
+        // Since both parent and child are 16:9, we only need to base this on the width.
+        const scale = parentWidth / childOriginalWidth;
+
+        // Apply the calculated scale to the child element
+        childElement.style.transform = `scale(${scale})`;
+
+        // Update the info box to display the current scale factor
+        if (scaleInfo) {
+          scaleInfo.textContent = `Scale: ${scale.toFixed(4)}`;
+        }
+      }
+
+      // Run the function when the page first loads
+      window.addEventListener("load", fitChildToParent);
+
+      // Rerun the function every time the window is resized
+      window.addEventListener("resize", fitChildToParent);
+    </script>
+  </body>
+</html>

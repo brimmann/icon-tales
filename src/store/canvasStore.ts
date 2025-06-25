@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import type { DragStartPoint, TextBoxEntity } from "../types";
 import { devtools } from "zustand/middleware";
+import type { Coordinates } from "@dnd-kit/core/dist/types";
 
 interface CanvasState {
   textBox: TextBoxEntity;
@@ -12,6 +13,7 @@ interface CanvasState {
   setIsEditing: (editing: boolean) => void;
   startDrag: (clientX: number, clientY: number) => void;
   updateDrag: (clientX: number, clientY: number) => void;
+  updateDragDnd: (delta: Coordinates) => void;
   endDrag: () => void;
 }
 
@@ -19,6 +21,7 @@ export const useCanvasStore = create<CanvasState>()(
   devtools(
     immer((set) => ({
       textBox: {
+        id: 1,
         content: "Click to edit text.",
         transform: {
           x: 10,
@@ -29,7 +32,6 @@ export const useCanvasStore = create<CanvasState>()(
       },
       isEditing: false,
       isDragging: false,
-
       dragStartPoint: null,
       updateTextContent: (contnet: string) =>
         set((state) => {
@@ -46,6 +48,11 @@ export const useCanvasStore = create<CanvasState>()(
             x: clientX - state.textBox.transform.x,
             y: clientY - state.textBox.transform.y,
           };
+        }),
+      updateDragDnd: (delta: Coordinates) =>
+        set((state) => {
+          state.textBox.transform.x += delta.x;
+          state.textBox.transform.y += delta.y;
         }),
       updateDrag: (clientX: number, clientY: number) =>
         set((state) => {
