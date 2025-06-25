@@ -4,7 +4,13 @@ function CanvasCard() {
   return (
     <div
       id="canvas-card"
-      className=" shadow-sm aspect-video w-11/12 max-w-[880px] bg-white overflow-hidden cursor-grab"
+      className=" shadow-sm  bg-white cursor-grab"
+      style={{
+        width: "1200px",
+        height: "675px",
+        minWidth: "1200px",
+        minHeight: "675px",
+      }}
     >
       <CanvasDnd />
     </div>

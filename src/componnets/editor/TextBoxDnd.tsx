@@ -53,7 +53,7 @@ function TextBoxDnd() {
 
   return (
     <div
-      className={`absolute cursor-move select-none touch-none  ${
+      className={`absolute cursor-move select-none touch-none text-box ${
         isEditing ? "border-2 border-base-300 hover:" : ""
       } ${isDragging ? "border border-accent" : ""} ${
         !isEditing && !isDragging ? "hover:border-2 hover:border-primary" : ""
