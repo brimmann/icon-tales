@@ -1,9 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useRef, type FocusEvent } from "react";
 import { useCanvasStore } from "../../store/canvasStore";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 
 function TextBoxDnd() {
   const textBox = useCanvasStore((state) => state.textBox);
@@ -11,28 +9,10 @@ function TextBoxDnd() {
   const updateTextContent = useCanvasStore((state) => state.updateTextContent);
   const setIsEditing = useCanvasStore((state) => state.setIsEditing);
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        // We can disable features we don't need to keep it light
-        heading: false,
-        strike: false,
-        bulletList: false,
-        orderedList: false,
-        blockquote: false,
-        codeBlock: false,
-        horizontalRule: false,
-        history: false, // Important for stability with external state
-        dropcursor: false,
-      }),
-    ],
-    content: textBox.content,
-    onBlur: ({ editor }) => {
-      updateTextContent(editor.getHTML());
-      setIsEditing(false);
-    },
-  });
-
+  const handleOnBlure = (e: FocusEvent<HTMLDivElement>) => {
+    updateTextContent(e.currentTarget.innerText);
+    setIsEditing(false);
+  };
   const { attributes, listeners, transform, setNodeRef, isDragging } =
     useDraggable({
       id: textBox.id,
@@ -44,12 +24,6 @@ function TextBoxDnd() {
   const handleDoubleClick = () => {
     setIsEditing(true);
   };
-
-  useEffect(() => {
-    if (!editor) return;
-
-    editor.setEditable(isEditing);
-  }, [isEditing, editor]);
 
   return (
     <div
@@ -74,8 +48,11 @@ function TextBoxDnd() {
       }}
       {...attributes}
       {...listeners}
+      contentEditable={isEditing}
+      suppressContentEditableWarning={true}
+      onBlur={handleOnBlure}
     >
-      <EditorContent editor={editor} />
+      {textBox.content}
     </div>
   );
 }

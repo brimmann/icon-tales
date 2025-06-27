@@ -46,11 +46,17 @@ function EditorPage() {
               minScale={scale}
               maxScale={3}
               wheel={{ step: 0.1 }}
-              doubleClick={{ disabled: false, step: 0.5 }}
+              doubleClick={{ disabled: true }}
               limitToBounds={false}
               centerZoomedOut={false}
               centerOnInit={true}
               onTransformed={(_, { scale }) => setScale(scale)}
+              onPanningStart={() => {
+                const activeElement = document.activeElement as HTMLElement;
+                if (activeElement) {
+                  activeElement.blur();
+                }
+              }}
             >
               <TransformComponent
                 wrapperClass=" !h-full !w-full "
