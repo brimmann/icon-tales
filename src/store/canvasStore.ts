@@ -9,12 +9,14 @@ interface CanvasState {
   isEditing: boolean;
   isDragging: boolean;
   dragStartPoint: DragStartPoint | null;
+  scale: number | null;
   updateTextContent: (content: string) => void;
   setIsEditing: (editing: boolean) => void;
   startDrag: (clientX: number, clientY: number) => void;
   updateDrag: (clientX: number, clientY: number) => void;
   updateDragDnd: (delta: Coordinates) => void;
   endDrag: () => void;
+  setScale: (scale: number) => void;
 }
 
 export const useCanvasStore = create<CanvasState>()(
@@ -24,8 +26,8 @@ export const useCanvasStore = create<CanvasState>()(
         id: 1,
         content: "Click to edit text.",
         transform: {
-          x: 10,
-          y: 10,
+          x: 0,
+          y: 0,
           width: 200,
           height: 60,
         },
@@ -33,6 +35,7 @@ export const useCanvasStore = create<CanvasState>()(
       isEditing: false,
       isDragging: false,
       dragStartPoint: null,
+      scale: null,
       updateTextContent: (contnet: string) =>
         set((state) => {
           state.textBox.content = contnet;
@@ -65,6 +68,10 @@ export const useCanvasStore = create<CanvasState>()(
         set((state) => {
           state.isDragging = false;
           state.dragStartPoint = null;
+        }),
+      setScale: (scale: number) =>
+        set((state) => {
+          state.scale = scale;
         }),
     })),
     { name: "cavasStore" }

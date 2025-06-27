@@ -2,12 +2,13 @@ import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
 import CanvasCard from "../componnets/editor/CanvasCard";
 import SlidesBottomBar from "../componnets/editor/SlidesBottomBar";
 import Toolbar from "../componnets/editor/Toolbar";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useCanvasStore } from "../store/canvasStore";
 
 function EditorPage() {
-  const [scale, setScale] = useState<number | null>(null);
-
   const wrapperWrapper = useRef<HTMLDivElement | null>(null);
+  const scale = useCanvasStore((state) => state.scale);
+  const setScale = useCanvasStore((state) => state.setScale);
 
   useEffect(() => {
     const calculateScale = () => {
@@ -24,7 +25,7 @@ function EditorPage() {
     };
 
     calculateScale();
-  }, []);
+  }, [setScale]);
 
   return (
     <div className="flex flex-col h-full lg:flex-row-reverse">
@@ -34,7 +35,7 @@ function EditorPage() {
         </div>
 
         <div
-          className="w-full h-full"
+          className="w-full flex-1 min-h-0"
           id="wrapper-wrapper"
           ref={wrapperWrapper}
         >
@@ -49,14 +50,13 @@ function EditorPage() {
               limitToBounds={false}
               centerZoomedOut={false}
               centerOnInit={true}
+              onTransformed={(_, { scale }) => setScale(scale)}
             >
               <TransformComponent
-                wrapperClass=" !h-full !w-full"
-                contentClass="!h-full !w-full"
+                wrapperClass=" !h-full !w-full "
+                contentClass=""
               >
-                <div className="flex justify-center items-center h-full w-full ">
-                  <CanvasCard />
-                </div>
+                <CanvasCard />
               </TransformComponent>
             </TransformWrapper>
           )}

@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import ZoomTest2 from "./ZoomTest2";
+import DndSensorsDemo from "./DndSensorsDemo";
 
 // Ensure the root element exists before rendering
 const rootElement = document.getElementById("root");
 if (rootElement) {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-      <ZoomTest2 />
+      <DndSensorsDemo />
     </React.StrictMode>
   );
 } else {
