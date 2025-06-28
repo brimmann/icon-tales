@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 export interface Tale {
   id?: number;
   title: string;
@@ -14,10 +16,16 @@ export interface Transform {
   height: number;
 }
 
+export type TextBoxStyle = Pick<
+  CSSProperties,
+  "fontSize" | "fontWeight" | "fontStyle" | "textAlign" | "color"
+>;
+
 export interface TextBoxEntity {
   id: number;
   content: string;
   transform: Transform;
+  style: TextBoxStyle;
 }
 
 export interface DragStartPoint {

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import type { DragStartPoint, TextBoxEntity } from "../types";
+import type { DragStartPoint, TextBoxEntity, TextBoxStyle } from "../types";
 import { devtools } from "zustand/middleware";
 import type { Coordinates } from "@dnd-kit/core/dist/types";
 
@@ -17,6 +17,7 @@ interface CanvasState {
   updateDragDnd: (delta: Coordinates) => void;
   endDrag: () => void;
   setScale: (scale: number) => void;
+  updateTextBoxStyle: (newStyle: TextBoxStyle) => void;
 }
 
 export const useCanvasStore = create<CanvasState>()(
@@ -30,6 +31,13 @@ export const useCanvasStore = create<CanvasState>()(
           y: 0,
           width: 200,
           height: 60,
+        },
+        style: {
+          fontSize: 16,
+          fontWeight: "bold",
+          fontStyle: "normal",
+          textAlign: "left",
+          color: "#333333",
         },
       },
       isEditing: false,
@@ -72,6 +80,10 @@ export const useCanvasStore = create<CanvasState>()(
       setScale: (scale: number) =>
         set((state) => {
           state.scale = scale;
+        }),
+      updateTextBoxStyle: (newStyle: TextBoxStyle) =>
+        set((state) => {
+          state.textBox.style = { ...newStyle };
         }),
     })),
     { name: "cavasStore" }

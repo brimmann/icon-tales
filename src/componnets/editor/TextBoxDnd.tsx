@@ -1,18 +1,15 @@
-import { useRef, type FocusEvent } from "react";
+import { useRef } from "react";
 import { useCanvasStore } from "../../store/canvasStore";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import TextBoxContent from "./TextBoxConent";
 
 function TextBoxDnd() {
   const textBox = useCanvasStore((state) => state.textBox);
   const isEditing = useCanvasStore((state) => state.isEditing);
-  const updateTextContent = useCanvasStore((state) => state.updateTextContent);
+
   const setIsEditing = useCanvasStore((state) => state.setIsEditing);
 
-  const handleOnBlure = (e: FocusEvent<HTMLDivElement>) => {
-    updateTextContent(e.currentTarget.innerText);
-    setIsEditing(false);
-  };
   const { attributes, listeners, transform, setNodeRef, isDragging } =
     useDraggable({
       id: textBox.id,
@@ -48,11 +45,8 @@ function TextBoxDnd() {
       }}
       {...attributes}
       {...listeners}
-      contentEditable={isEditing}
-      suppressContentEditableWarning={true}
-      onBlur={handleOnBlure}
     >
-      {textBox.content}
+      <TextBoxContent />
     </div>
   );
 }
