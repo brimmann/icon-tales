@@ -8,6 +8,10 @@ import { useCanvasStore } from "../store/canvasStore";
 function EditorPage() {
   const wrapperWrapper = useRef<HTMLDivElement | null>(null);
   const scale = useCanvasStore((state) => state.scale);
+  // const setActiveTextBoxId = useCanvasStore(
+  //   (state) => state.setActiveTextBoxId
+  // );
+
   const setScale = useCanvasStore((state) => state.setScale);
 
   useEffect(() => {
@@ -30,18 +34,15 @@ function EditorPage() {
   return (
     <div className="flex flex-col h-full lg:flex-row-reverse">
       <div className="flex-1 min-h-0 flex flex-col  bg-base-300 overflow-hidden">
-        <div className="flex items-center justify-center lg:mt-5">
-          <Toolbar />
-        </div>
-
         <div
-          className="w-full flex-1 min-h-0"
+          className="relative w-full flex-1 min-h-0"
           id="wrapper-wrapper"
           ref={wrapperWrapper}
         >
+          <Toolbar />
           {scale !== null && (
             <TransformWrapper
-              panning={{ excluded: ["text-box"] }}
+              panning={{ excluded: ["text-box", "toolbar"] }}
               initialScale={scale}
               minScale={scale}
               maxScale={3}
@@ -54,7 +55,8 @@ function EditorPage() {
               onPanningStart={() => {
                 const activeElement = document.activeElement as HTMLElement;
                 if (activeElement) {
-                  activeElement.blur();
+                  // activeElement.blur();
+                  // setActiveTextBoxId(null);
                 }
               }}
             >

@@ -4,14 +4,18 @@ import type { TextBoxStyle } from "../../types";
 import { debounce } from "lodash";
 
 const Toolbar: React.FC = () => {
-  const textBoxFromStore = useCanvasStore((state) => state.textBox);
-  const updateTextBoxStyle = useCanvasStore(
-    (state) => state.updateTextBoxStyle
-  );
+  const textBoxFromStore = useCanvasStore((state) => state.getActiveTextBox());
 
   const debounceUpdateTextBoxStyle = debounce((newStyle: TextBoxStyle) => {
     updateTextBoxStyle(newStyle);
   }, 100);
+  const updateTextBoxStyle = useCanvasStore(
+    (state) => state.updateTextBoxStyle
+  );
+
+  if (!textBoxFromStore) {
+    return null;
+  }
 
   const handleFontSize = (e: ChangeEvent<HTMLInputElement>) => {
     const newStyle: TextBoxStyle = {
@@ -59,7 +63,7 @@ const Toolbar: React.FC = () => {
   };
 
   return (
-    <div className="bg-white p-3 border-b border-gray-200 shadow-sm flex items-center gap-4 flex-nowrap overflow-x-auto">
+    <div className="toolbar z-50 bg-white absolute top-4 left-0 right-0 mx-auto p-3 border-b border-gray-200 shadow-sm flex items-center gap-4 flex-nowrap overflow-x-auto pointer-events-auto max-w-fit">
       {/* Font Size Control */}
       <div className="flex items-center gap-2">
         <label className="text-sm font-medium text-gray-600">Size</label>

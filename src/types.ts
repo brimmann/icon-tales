@@ -1,3 +1,4 @@
+import type { UniqueIdentifier } from "@dnd-kit/core";
 import type { CSSProperties } from "react";
 
 export interface Tale {
@@ -22,7 +23,7 @@ export type TextBoxStyle = Pick<
 >;
 
 export interface TextBoxEntity {
-  id: number;
+  id: UniqueIdentifier;
   content: string;
   transform: Transform;
   style: TextBoxStyle;

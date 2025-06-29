@@ -2,15 +2,19 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import type { DragStartPoint, TextBoxEntity, TextBoxStyle } from "../types";
 import { devtools } from "zustand/middleware";
-import type { Coordinates } from "@dnd-kit/core/dist/types";
+import type { Coordinates, UniqueIdentifier } from "@dnd-kit/core/dist/types";
 
 interface CanvasState {
+  textBoxes: TextBoxEntity[];
   textBox: TextBoxEntity;
+  activeTextBoxId: UniqueIdentifier | null;
   isEditing: boolean;
   isDragging: boolean;
   dragStartPoint: DragStartPoint | null;
   scale: number | null;
   updateTextContent: (content: string) => void;
+  setActiveTextBoxId: (id: UniqueIdentifier | null) => void;
+  getActiveTextBox: () => TextBoxEntity | null;
   setIsEditing: (editing: boolean) => void;
   startDrag: (clientX: number, clientY: number) => void;
   updateDrag: (clientX: number, clientY: number) => void;
@@ -20,9 +24,47 @@ interface CanvasState {
   updateTextBoxStyle: (newStyle: TextBoxStyle) => void;
 }
 
+const initialTextBoxes: TextBoxEntity[] = [
+  {
+    id: 1,
+    content: "Click to edit text 1.",
+    transform: {
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 60,
+    },
+    style: {
+      fontSize: 16,
+      fontWeight: "bold",
+      fontStyle: "normal",
+      textAlign: "left",
+      color: "#333333",
+    },
+  },
+  {
+    id: 2,
+    content: "Click to edit text 2.",
+    transform: {
+      x: 300,
+      y: 200,
+      width: 200,
+      height: 60,
+    },
+    style: {
+      fontSize: 16,
+      fontWeight: "bold",
+      fontStyle: "normal",
+      textAlign: "left",
+      color: "#333333",
+    },
+  },
+];
+
 export const useCanvasStore = create<CanvasState>()(
   devtools(
-    immer((set) => ({
+    immer((set, get) => ({
+      textBoxes: initialTextBoxes,
       textBox: {
         id: 1,
         content: "Click to edit text.",
@@ -40,14 +82,28 @@ export const useCanvasStore = create<CanvasState>()(
           color: "#333333",
         },
       },
+      activeTextBoxId: null,
       isEditing: false,
       isDragging: false,
       dragStartPoint: null,
       scale: null,
       updateTextContent: (contnet: string) =>
         set((state) => {
-          state.textBox.content = contnet;
+          const textBoxIndex = state.textBoxes.findIndex(
+            (tb) => tb.id === state.activeTextBoxId
+          );
+          state.textBoxes[textBoxIndex].content = contnet;
         }),
+      setActiveTextBoxId: (id: UniqueIdentifier | null) =>
+        set((state) => {
+          state.activeTextBoxId = id;
+        }),
+      getActiveTextBox: () => {
+        const textBox = get().textBoxes.find(
+          (tb) => tb.id === get().activeTextBoxId
+        );
+        return textBox || null;
+      },
       setIsEditing: (editing: boolean) =>
         set((state) => {
           state.isEditing = editing;
@@ -62,8 +118,11 @@ export const useCanvasStore = create<CanvasState>()(
         }),
       updateDragDnd: (delta: Coordinates) =>
         set((state) => {
-          state.textBox.transform.x += delta.x;
-          state.textBox.transform.y += delta.y;
+          const textBoxIndex = state.textBoxes.findIndex(
+            (tb) => tb.id === state.activeTextBoxId
+          );
+          state.textBoxes[textBoxIndex].transform.x += delta.x;
+          state.textBoxes[textBoxIndex].transform.y += delta.y;
         }),
       updateDrag: (clientX: number, clientY: number) =>
         set((state) => {
@@ -83,7 +142,10 @@ export const useCanvasStore = create<CanvasState>()(
         }),
       updateTextBoxStyle: (newStyle: TextBoxStyle) =>
         set((state) => {
-          state.textBox.style = { ...newStyle };
+          const textBoxIndex = state.textBoxes.findIndex(
+            (tb) => tb.id === state.activeTextBoxId
+          );
+          state.textBoxes[textBoxIndex].style = { ...newStyle };
         }),
     })),
     { name: "cavasStore" }

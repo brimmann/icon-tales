@@ -7,6 +7,10 @@ import { scaleDragModifier } from "../../utils/scaleDragMoveDndKitModifier";
 
 function CanvasDnd() {
   const updateDragDnd = useCanvasStore((state) => state.updateDragDnd);
+  const textBoxes = useCanvasStore((state) => state.textBoxes);
+  const setActiveTextBoxId = useCanvasStore(
+    (state) => state.setActiveTextBoxId
+  );
 
   const handleDragEnd = useCallback(
     (e: DragEndEvent) => {
@@ -19,6 +23,9 @@ function CanvasDnd() {
   return (
     <DndContext
       onDragEnd={handleDragEnd}
+      onDragStart={(e) => {
+        setActiveTextBoxId(e.active.id);
+      }}
       modifiers={[restrictToParentElement, scaleDragModifier]}
     >
       <div
@@ -40,7 +47,9 @@ function CanvasDnd() {
             backgroundSize: "20px 20px",
           }}
         />
-        <TextBoxDnd />
+        {textBoxes.map((tb) => (
+          <TextBoxDnd textBox={tb} key={tb.id} />
+        ))}
       </div>
     </DndContext>
   );
