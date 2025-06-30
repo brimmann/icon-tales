@@ -7,7 +7,6 @@ import type { Coordinates, UniqueIdentifier } from "@dnd-kit/core/dist/types";
 interface CanvasState {
   textBoxes: TextBoxEntity[];
   temporaryTextContent: string;
-  textBox: TextBoxEntity;
   activeTextBoxId: UniqueIdentifier | null;
   isEditing: boolean;
   isDragging: boolean;
@@ -64,23 +63,6 @@ export const useCanvasStore = create<CanvasState>()(
     immer((set, get) => ({
       textBoxes: initialTextBoxes,
       temporaryTextContent: "",
-      textBox: {
-        id: 1,
-        content: "Click to edit text.",
-        transform: {
-          x: 0,
-          y: 0,
-          width: 200,
-          height: 60,
-        },
-        style: {
-          fontSize: 16,
-          fontWeight: "bold",
-          fontStyle: "normal",
-          textAlign: "left",
-          color: "#333333",
-        },
-      },
       activeTextBoxId: null,
       isEditing: false,
       isDragging: false,
