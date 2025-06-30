@@ -29,9 +29,4 @@ export interface TextBoxEntity {
   style: TextBoxStyle;
 }
 
-export interface DragStartPoint {
-  x: number;
-  y: number;
-}
-
 export type NativeDragEvent = MouseEvent | TouchEvent;

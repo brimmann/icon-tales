@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import type { DragStartPoint, TextBoxEntity, TextBoxStyle } from "../types";
+import type { TextBoxEntity, TextBoxStyle } from "../types";
 import { devtools } from "zustand/middleware";
 import type { Coordinates, UniqueIdentifier } from "@dnd-kit/core/dist/types";
 
@@ -11,17 +11,13 @@ interface CanvasState {
   activeTextBoxId: UniqueIdentifier | null;
   isEditing: boolean;
   isDragging: boolean;
-  dragStartPoint: DragStartPoint | null;
   scale: number | null;
   updateTextContent: () => void;
   setTemporaryTextContent: (content: string) => void;
   setActiveTextBoxId: (id: UniqueIdentifier | null) => void;
   getActiveTextBox: () => TextBoxEntity | null;
   setIsEditing: (editing: boolean) => void;
-  startDrag: (clientX: number, clientY: number) => void;
-  updateDrag: (clientX: number, clientY: number) => void;
   updateDragDnd: (delta: Coordinates) => void;
-  endDrag: () => void;
   setScale: (scale: number) => void;
   updateTextBoxStyle: (newStyle: TextBoxStyle) => void;
 }
@@ -88,7 +84,6 @@ export const useCanvasStore = create<CanvasState>()(
       activeTextBoxId: null,
       isEditing: false,
       isDragging: false,
-      dragStartPoint: null,
       scale: null,
       updateTextContent: () =>
         set((state) => {
@@ -119,14 +114,6 @@ export const useCanvasStore = create<CanvasState>()(
         set((state) => {
           state.isEditing = editing;
         }),
-      startDrag: (clientX: number, clientY: number) =>
-        set((state) => {
-          state.isDragging = true;
-          state.dragStartPoint = {
-            x: clientX - state.textBox.transform.x,
-            y: clientY - state.textBox.transform.y,
-          };
-        }),
       updateDragDnd: (delta: Coordinates) =>
         set((state) => {
           const textBoxIndex = state.textBoxes.findIndex(
@@ -135,18 +122,7 @@ export const useCanvasStore = create<CanvasState>()(
           state.textBoxes[textBoxIndex].transform.x += delta.x;
           state.textBoxes[textBoxIndex].transform.y += delta.y;
         }),
-      updateDrag: (clientX: number, clientY: number) =>
-        set((state) => {
-          if (state.isDragging && state.dragStartPoint) {
-            state.textBox.transform.x = clientX - state.dragStartPoint.x;
-            state.textBox.transform.y = clientY - state.dragStartPoint.y;
-          }
-        }),
-      endDrag: () =>
-        set((state) => {
-          state.isDragging = false;
-          state.dragStartPoint = null;
-        }),
+
       setScale: (scale: number) =>
         set((state) => {
           state.scale = scale;
