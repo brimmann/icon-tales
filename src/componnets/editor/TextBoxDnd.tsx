@@ -12,8 +12,8 @@ interface TextBoxDndProps {
 function TextBoxDnd({ textBox }: TextBoxDndProps) {
   const isEditing = useCanvasStore((state) => state.isEditing);
   const activeTextBoxId = useCanvasStore((state) => state.activeTextBoxId);
+  const updateTextContent = useCanvasStore((state) => state.updateTextContent);
 
-  const setIsEditing = useCanvasStore((state) => state.setIsEditing);
   const setActiveTextBoxId = useCanvasStore(
     (state) => state.setActiveTextBoxId
   );
@@ -21,18 +21,10 @@ function TextBoxDnd({ textBox }: TextBoxDndProps) {
   const { attributes, listeners, transform, setNodeRef, isDragging } =
     useDraggable({
       id: textBox.id,
-      disabled: isEditing,
+      // disabled: isEditing,
     });
 
   const textBoxRef = useRef<HTMLDivElement>(null);
-
-  const handleDoubleClick = () => {
-    console.log(
-      `[TextBoxDnd] Double-click on ID: ${textBox.id}. Setting to editing mode.`
-    );
-    setActiveTextBoxId(textBox.id);
-    setIsEditing(true);
-  };
 
   return (
     <div
@@ -53,10 +45,14 @@ function TextBoxDnd({ textBox }: TextBoxDndProps) {
           isEditing && activeTextBoxId === textBox.id ? "horizontal" : "none",
         overflow: "auto",
       }}
-      onDoubleClick={handleDoubleClick}
       ref={(node) => {
         setNodeRef(node);
         textBoxRef.current = node;
+      }}
+      onClick={() => {
+        if (textBox.id && textBox.id === activeTextBoxId) return;
+        updateTextContent();
+        setActiveTextBoxId(textBox.id);
       }}
       {...attributes}
       {...listeners}

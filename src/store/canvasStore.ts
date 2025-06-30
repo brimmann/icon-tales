@@ -6,13 +6,15 @@ import type { Coordinates, UniqueIdentifier } from "@dnd-kit/core/dist/types";
 
 interface CanvasState {
   textBoxes: TextBoxEntity[];
+  temporaryTextContent: string;
   textBox: TextBoxEntity;
   activeTextBoxId: UniqueIdentifier | null;
   isEditing: boolean;
   isDragging: boolean;
   dragStartPoint: DragStartPoint | null;
   scale: number | null;
-  updateTextContent: (content: string) => void;
+  updateTextContent: () => void;
+  setTemporaryTextContent: (content: string) => void;
   setActiveTextBoxId: (id: UniqueIdentifier | null) => void;
   getActiveTextBox: () => TextBoxEntity | null;
   setIsEditing: (editing: boolean) => void;
@@ -65,6 +67,7 @@ export const useCanvasStore = create<CanvasState>()(
   devtools(
     immer((set, get) => ({
       textBoxes: initialTextBoxes,
+      temporaryTextContent: "",
       textBox: {
         id: 1,
         content: "Click to edit text.",
@@ -87,12 +90,20 @@ export const useCanvasStore = create<CanvasState>()(
       isDragging: false,
       dragStartPoint: null,
       scale: null,
-      updateTextContent: (contnet: string) =>
+      updateTextContent: () =>
         set((state) => {
+          if (!state.isEditing) return;
+          const content = state.temporaryTextContent;
           const textBoxIndex = state.textBoxes.findIndex(
             (tb) => tb.id === state.activeTextBoxId
           );
-          state.textBoxes[textBoxIndex].content = contnet;
+          state.textBoxes[textBoxIndex].content = content;
+          state.isEditing = false;
+          state.temporaryTextContent = "";
+        }),
+      setTemporaryTextContent: (content: string) =>
+        set((state) => {
+          state.temporaryTextContent = content;
         }),
       setActiveTextBoxId: (id: UniqueIdentifier | null) =>
         set((state) => {
