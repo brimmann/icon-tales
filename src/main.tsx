@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+// import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
@@ -6,9 +6,7 @@ import { routes } from "./routes";
 import MainLayout from "./MainLayout";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <MainLayout>
-      <RouterProvider router={routes} />
-    </MainLayout>
-  </StrictMode>
+  <MainLayout>
+    <RouterProvider router={routes} />
+  </MainLayout>
 );

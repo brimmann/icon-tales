@@ -50,6 +50,7 @@ function TextBoxDnd({ textBox }: TextBoxDndProps) {
         textBoxRef.current = node;
       }}
       onClick={() => {
+        console.log("single click called");
         if (textBox.id && textBox.id === activeTextBoxId) return;
         updateTextContent();
         setActiveTextBoxId(textBox.id);

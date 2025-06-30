@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useCanvasStore } from "../../store/canvasStore";
 import type { TextBoxEntity } from "../../types";
 import { type MouseEvent as ReactMouseEvent } from "react";
@@ -19,7 +19,33 @@ function TextBoxContent({ textBox }: TextBoxConentProps) {
     (state) => state.setActiveTextBoxId
   );
 
+  const prevDeps = useRef({ textBox, isEditing, activeTextBoxId });
+
+  useEffect(() => {
+    const currentDeps = { textBox, isEditing, activeTextBoxId };
+    const changedDeps: Record<string, { from: any; to: any }> = {};
+    (Object.keys(currentDeps) as (keyof typeof currentDeps)[]).forEach(
+      (key) => {
+        if (prevDeps.current[key] !== currentDeps[key]) {
+          changedDeps[key] = {
+            from: prevDeps.current[key],
+            to: currentDeps[key],
+          };
+        }
+      }
+    );
+
+    if (Object.keys(changedDeps).length) {
+      console.log("TextBoxContent re-render because of:", changedDeps);
+    }
+
+    prevDeps.current = currentDeps;
+  });
+
   const editableDivRef = useRef<HTMLDivElement>(null);
+  const renderCount = useRef(0);
+  console.log("Componet rendered: ", renderCount.current);
+  renderCount.current++;
 
   // const handleOnBlure = (e: FocusEvent<HTMLDivElement>) => {
   //   console.log("handleOnBlure");
@@ -35,6 +61,21 @@ function TextBoxContent({ textBox }: TextBoxConentProps) {
     setTemporaryTextContent(e.currentTarget.innerText);
   };
 
+  useEffect(() => {
+    console.log("isEditing changed", isEditing);
+    const element = editableDivRef.current;
+    if (element && activeTextBoxId === textBox.id) {
+      element.focus();
+      const selection = window.getSelection();
+      if (selection) {
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
+    }
+  }, [isEditing]);
   return (
     <div
       ref={editableDivRef}
