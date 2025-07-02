@@ -1,7 +1,8 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useCanvasStore } from "../../store/canvasStore";
 import type { TextBoxEntity } from "../../types";
 import { type MouseEvent as ReactMouseEvent } from "react";
+import { Resizable } from "react-resizable";
 
 interface TextBoxConentProps {
   textBox: TextBoxEntity;
@@ -11,6 +12,11 @@ function TextBoxContent({ textBox }: TextBoxConentProps) {
   const setIsEditing = useCanvasStore((state) => state.setIsEditing);
   const isEditing = useCanvasStore((state) => state.isEditing);
   const activeTextBoxId = useCanvasStore((state) => state.activeTextBoxId);
+  const updateTextBoxWidth = useCanvasStore(
+    (state) => state.updateTextBoxWidth
+  );
+
+  const [localWidth, setLocalWidth] = useState<number>(textBox.transform.width);
 
   const setTemporaryTextContent = useCanvasStore(
     (state) => state.setTemporaryTextContent
@@ -35,6 +41,10 @@ function TextBoxContent({ textBox }: TextBoxConentProps) {
     setTemporaryTextContent(e.currentTarget.innerText);
   };
 
+  // useEffect(() => {
+  //   setLocalWidth(textBox.transform.width);
+  // }, []);
+
   useEffect(() => {
     const element = editableDivRef.current;
     if (element && activeTextBoxId === textBox.id) {
@@ -50,21 +60,45 @@ function TextBoxContent({ textBox }: TextBoxConentProps) {
     }
   }, [isEditing]);
   return (
-    <div
-      ref={editableDivRef}
-      contentEditable={isEditing && activeTextBoxId === textBox.id}
-      suppressContentEditableWarning={true}
-      style={{ ...textBox.style }}
-      // onBlur={handleOnBlure}
-      onInput={(e) => {
-        console.log("onChange");
-        setTemporaryTextContent(e.currentTarget.innerText);
+    <Resizable
+      width={localWidth}
+      axis="x"
+      handleSize={[12, 12]}
+      resizeHandles={["e"]}
+      height={textBox.transform.height}
+      onResizeStop={(_, { size }) => {
+        updateTextBoxWidth(size.width);
+        setLocalWidth(size.width);
       }}
-      className="border-none outline-none"
-      onDoubleClick={handleDoubleClick}
+      onResize={(_, { size }) => {
+        setLocalWidth(size.width);
+      }}
+      handle={
+        <div
+          className={`${
+            isEditing && textBox.id === activeTextBoxId ? "" : "hidden"
+          } absolute  top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 rounded-full bg-primary cursor-ew-resize`}
+        />
+      }
     >
-      {textBox.content}
-    </div>
+      <div>
+        <div
+          ref={editableDivRef}
+          contentEditable={isEditing && activeTextBoxId === textBox.id}
+          suppressContentEditableWarning={true}
+          style={{ ...textBox.style, width: localWidth }}
+          // onBlur={handleOnBlure}
+          onInput={(e) => {
+            console.log("onChange");
+            setTemporaryTextContent(e.currentTarget.innerText);
+          }}
+          className="box border-none outline-none"
+          onDoubleClick={handleDoubleClick}
+        >
+          {textBox.content}
+        </div>
+      </div>
+    </Resizable>
   );
 }
 

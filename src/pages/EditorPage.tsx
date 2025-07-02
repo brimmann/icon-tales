@@ -78,7 +78,6 @@ function EditorPage() {
           id="wrapper-wrapper"
           ref={wrapperWrapper}
           onClick={(e) => {
-            console.log(e.target, e.currentTarget);
             const target = e.target as HTMLDivElement;
             if (!target.closest(".text-box") && !target.closest(".tool-bar")) {
               setIsEditing(false);
@@ -89,7 +88,7 @@ function EditorPage() {
           {scale !== null && (
             <TransformWrapper
               ref={transofrmWrapperRef}
-              panning={{ excluded: ["text-box", "toolbar"] }}
+              panning={{ excluded: ["text-box", "tool-bar", "handle"] }}
               initialScale={scale}
               minScale={minScale.current}
               maxScale={3}

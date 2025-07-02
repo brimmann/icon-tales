@@ -28,7 +28,7 @@ function TextBoxDnd({ textBox }: TextBoxDndProps) {
 
   return (
     <div
-      className={`absolute cursor-move select-none touch-none text-box  ${
+      className={`absolute cursor-move select-none touch-none text-box ${
         isEditing ? "" : ""
       } ${isDragging ? "" : ""} ${!isEditing && !isDragging ? "" : ""} ${
         activeTextBoxId === textBox.id
@@ -36,14 +36,10 @@ function TextBoxDnd({ textBox }: TextBoxDndProps) {
           : "hover:scale-105 hover:border hover:border-accent"
       }`}
       style={{
-        width: textBox.transform.width,
         left: textBox.transform.x,
         top: textBox.transform.y,
         transform: CSS.Translate.toString(transform),
         willChange: "transform",
-        resize:
-          isEditing && activeTextBoxId === textBox.id ? "horizontal" : "none",
-        overflow: "auto",
       }}
       ref={(node) => {
         setNodeRef(node);

@@ -14,6 +14,7 @@ interface CanvasState {
   minScale: number | null;
   transformInit: boolean;
   updateTextContent: () => void;
+  updateTextBoxWidth: (width: number) => void;
   setTemporaryTextContent: (content: string) => void;
   setActiveTextBoxId: (id: UniqueIdentifier | null) => void;
   getActiveTextBox: () => TextBoxEntity | null;
@@ -83,6 +84,13 @@ export const useCanvasStore = create<CanvasState>()(
           state.textBoxes[textBoxIndex].content = content;
           state.isEditing = false;
           state.temporaryTextContent = "";
+        }),
+      updateTextBoxWidth: (width: number) =>
+        set((state) => {
+          const textBoxIndex = state.textBoxes.findIndex(
+            (tb) => tb.id === state.activeTextBoxId
+          );
+          state.textBoxes[textBoxIndex].transform.width = width;
         }),
       setTemporaryTextContent: (content: string) =>
         set((state) => {
