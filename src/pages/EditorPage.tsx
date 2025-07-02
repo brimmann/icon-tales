@@ -1,4 +1,8 @@
-import { TransformComponent, TransformWrapper } from "react-zoom-pan-pinch";
+import {
+  type ReactZoomPanPinchRef,
+  TransformComponent,
+  TransformWrapper,
+} from "react-zoom-pan-pinch";
 import CanvasCard from "../componnets/editor/CanvasCard";
 import SlidesBottomBar from "../componnets/editor/SlidesBottomBar";
 import Toolbar from "../componnets/editor/Toolbar";
@@ -8,11 +12,18 @@ import { useCanvasStore } from "../store/canvasStore";
 function EditorPage() {
   const wrapperWrapper = useRef<HTMLDivElement | null>(null);
   const scale = useCanvasStore((state) => state.scale);
+  const transformInit = useCanvasStore((state) => state.transformInit);
+  const setTransformInit = useCanvasStore((state) => state.setTransformInit);
+
+  const setMinScale = useCanvasStore((state) => state.setMinScale);
   // const setActiveTextBoxId = useCanvasStore(
   //   (state) => state.setActiveTextBoxId
   // );
 
   const setScale = useCanvasStore((state) => state.setScale);
+
+  const minScale = useRef<number>(0);
+  const transofrmWrapperRef = useRef<ReactZoomPanPinchRef>(null);
 
   useEffect(() => {
     const calculateScale = () => {
@@ -22,14 +33,69 @@ function EditorPage() {
         const availableWidth = wrapperWrapper.current?.clientWidth;
         const padding = 40;
         const scaleX = (availableWidth - padding) / canvasWidth;
-        const fitScale = Math.min(scaleX, 1);
-
+        const fitScale = Math.round(Math.min(scaleX, 1) * 10) / 10;
         setScale(fitScale);
+        setMinScale(fitScale);
+        minScale.current = fitScale;
       }
     };
 
     calculateScale();
-  }, [setScale]);
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(transofrmWrapperRef.current?.instance.transformState);
+  //   if (
+  //     scale &&
+  //     scale <= minScale.current &&
+  //     transformInit &&
+  //     transofrmWrapperRef.current
+  //   ) {
+  //     console.log("center");
+  //     transofrmWrapperRef.current.setTransform(0, 0, minScale.current);
+  //   }
+  // }, [scale, minScale]);
+
+  useEffect(() => {
+    if (transofrmWrapperRef.current && scale && transformInit) {
+      const state = transofrmWrapperRef.current.instance.transformState;
+      console.log("scale", scale);
+      transofrmWrapperRef.current.setTransform(
+        state.positionX,
+        state.positionY,
+        scale,
+        100
+      );
+      if (scale <= minScale.current) {
+        // transofrmWrapperRef.current.setTransform(
+        //   0,
+        //   0,
+        //   minScale.current,
+        //   undefined
+        // );
+        const timeOut = setTimeout(() => {
+          if (transofrmWrapperRef.current) {
+            transofrmWrapperRef.current.centerView();
+            const state = transofrmWrapperRef.current.instance.transformState;
+            console.log("min", state);
+            clearTimeout(timeOut);
+          }
+        }, 110);
+      }
+
+      console.log("norm", state);
+    }
+  }, [scale]);
+
+  // useEffect(() => {
+  //   const timeOut = setTimeout(() => {
+  //     console.log(
+  //       "innnr state updated",
+  //       transofrmWrapperRef.current?.instance.transformState.scale
+  //     );
+  //     clearTimeout(timeOut);
+  //   }, 110);
+  // }, [transofrmWrapperRef.current?.instance.transformState.scale]);
 
   return (
     <div className="flex flex-col h-full lg:flex-row-reverse">
@@ -39,27 +105,31 @@ function EditorPage() {
           id="wrapper-wrapper"
           ref={wrapperWrapper}
         >
-          <Toolbar />
           {scale !== null && (
             <TransformWrapper
+              ref={transofrmWrapperRef}
               panning={{ excluded: ["text-box", "toolbar"] }}
               initialScale={scale}
-              minScale={scale}
+              minScale={minScale.current}
               maxScale={3}
               wheel={{ step: 0.1 }}
               doubleClick={{ disabled: true }}
               limitToBounds={false}
-              centerZoomedOut={false}
               centerOnInit={true}
-              onTransformed={(_, { scale }) => setScale(scale)}
-              onPanningStart={() => {
-                const activeElement = document.activeElement as HTMLElement;
-                if (activeElement) {
-                  // activeElement.blur();
-                  // setActiveTextBoxId(null);
-                }
+              onZoomStop={(ref) => {
+                console.log("zoomstop");
+                setScale(ref.instance.transformState.scale);
+                setTransformInit(true);
               }}
+              // onPanningStart={() => {
+              //   const activeElement = document.activeElement as HTMLElement;
+              //   if (activeElement) {
+              //     // activeElement.blur();
+              //     // setActiveTextBoxId(null);
+              //   }
+              // }}
             >
+              <Toolbar />
               <TransformComponent
                 wrapperClass=" !h-full !w-full "
                 contentClass=""

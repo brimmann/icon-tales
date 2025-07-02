@@ -11,6 +11,8 @@ interface CanvasState {
   isEditing: boolean;
   isDragging: boolean;
   scale: number | null;
+  minScale: number | null;
+  transformInit: boolean;
   updateTextContent: () => void;
   setTemporaryTextContent: (content: string) => void;
   setActiveTextBoxId: (id: UniqueIdentifier | null) => void;
@@ -19,6 +21,8 @@ interface CanvasState {
   updateDragDnd: (delta: Coordinates) => void;
   setScale: (scale: number) => void;
   updateTextBoxStyle: (newStyle: TextBoxStyle) => void;
+  setMinScale: (scale: number) => void;
+  setTransformInit: (init: boolean) => void;
 }
 
 const initialTextBoxes: TextBoxEntity[] = [
@@ -67,6 +71,8 @@ export const useCanvasStore = create<CanvasState>()(
       isEditing: false,
       isDragging: false,
       scale: null,
+      minScale: null,
+      transformInit: false,
       updateTextContent: () =>
         set((state) => {
           if (!state.isEditing) return;
@@ -104,10 +110,13 @@ export const useCanvasStore = create<CanvasState>()(
           state.textBoxes[textBoxIndex].transform.x += delta.x;
           state.textBoxes[textBoxIndex].transform.y += delta.y;
         }),
-
       setScale: (scale: number) =>
         set((state) => {
           state.scale = scale;
+        }),
+      setMinScale: (minScale: number) =>
+        set((state) => {
+          state.minScale = minScale;
         }),
       updateTextBoxStyle: (newStyle: TextBoxStyle) =>
         set((state) => {
@@ -115,6 +124,10 @@ export const useCanvasStore = create<CanvasState>()(
             (tb) => tb.id === state.activeTextBoxId
           );
           state.textBoxes[textBoxIndex].style = { ...newStyle };
+        }),
+      setTransformInit: (init: boolean) =>
+        set((state) => {
+          state.transformInit = init;
         }),
     })),
     { name: "cavasStore" }

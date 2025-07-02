@@ -25,6 +25,7 @@
     "dexie": "^4.0.11",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.525.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
