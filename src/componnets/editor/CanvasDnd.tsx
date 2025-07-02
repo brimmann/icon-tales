@@ -7,12 +7,17 @@ import {
 import { useCallback } from "react";
 import { useCanvasStore } from "../../store/canvasStore";
 import TextBoxDnd from "./TextBoxDnd";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
+import {
+  createSnapModifier,
+  restrictToParentElement,
+} from "@dnd-kit/modifiers";
 import { scaleDragModifier } from "../../utils/scaleDragMoveDndKitModifier";
 
 function CanvasDnd() {
   const updateDragDnd = useCanvasStore((state) => state.updateDragDnd);
   const updateTextContent = useCanvasStore((state) => state.updateTextContent);
+
+  const snapToGrid = createSnapModifier(20);
 
   const textBoxes = useCanvasStore((state) => state.textBoxes);
   const setActiveTextBoxId = useCanvasStore(
@@ -35,7 +40,7 @@ function CanvasDnd() {
   return (
     <DndContext
       onDragEnd={handleDragEnd}
-      modifiers={[restrictToParentElement, scaleDragModifier]}
+      modifiers={[restrictToParentElement, scaleDragModifier, snapToGrid]}
       sensors={[dragContorlSensor]}
       onDragStart={(e) => {
         updateTextContent();
@@ -51,6 +56,16 @@ function CanvasDnd() {
           minHeight: "675px",
         }}
       >
+        <div
+          className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: `
+            linear-gradient(to right, #000 1px, transparent 1px),
+            linear-gradient(to bottom, #000 1px, transparent 1px)
+          `,
+            backgroundSize: "20px 20px",
+          }}
+        />
         {textBoxes.map((tb) => (
           <TextBoxDnd textBox={tb} key={tb.id} />
         ))}
