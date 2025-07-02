@@ -21,7 +21,7 @@ function TextBoxDnd({ textBox }: TextBoxDndProps) {
   const { attributes, listeners, transform, setNodeRef, isDragging } =
     useDraggable({
       id: textBox.id,
-      // disabled: isEditing,
+      disabled: isEditing && textBox.id === activeTextBoxId,
     });
 
   const textBoxRef = useRef<HTMLDivElement>(null);
@@ -50,7 +50,6 @@ function TextBoxDnd({ textBox }: TextBoxDndProps) {
         textBoxRef.current = node;
       }}
       onClick={() => {
-        console.log("single click called");
         if (textBox.id && textBox.id === activeTextBoxId) return;
         updateTextContent();
         setActiveTextBoxId(textBox.id);

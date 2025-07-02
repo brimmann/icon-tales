@@ -1,16 +1,21 @@
-import React, { type ChangeEvent, type CSSProperties } from "react";
+import React, { useMemo, type ChangeEvent, type CSSProperties } from "react";
 import { useCanvasStore } from "../../store/canvasStore";
 import type { TextBoxStyle } from "../../types";
-import { debounce } from "lodash";
+import { throttle } from "lodash";
 
 const Toolbar: React.FC = () => {
   const textBoxFromStore = useCanvasStore((state) => state.getActiveTextBox());
 
-  const debounceUpdateTextBoxStyle = debounce((newStyle: TextBoxStyle) => {
-    updateTextBoxStyle(newStyle);
-  }, 100);
   const updateTextBoxStyle = useCanvasStore(
     (state) => state.updateTextBoxStyle
+  );
+
+  const throttledUpdateTextBoxStlye = useMemo(
+    () =>
+      throttle((newStyle: TextBoxStyle) => {
+        updateTextBoxStyle(newStyle);
+      }, 100),
+    [updateTextBoxStyle]
   );
 
   if (!textBoxFromStore) {
@@ -22,10 +27,7 @@ const Toolbar: React.FC = () => {
       ...textBoxFromStore.style,
       fontSize: parseInt(e.target.value),
     };
-    debounce(
-      (newStyle: TextBoxStyle) => updateTextBoxStyle(newStyle),
-      100
-    )(newStyle);
+    throttledUpdateTextBoxStlye(newStyle);
   };
 
   const handleBold = () => {
@@ -34,7 +36,7 @@ const Toolbar: React.FC = () => {
       fontWeight:
         textBoxFromStore.style.fontWeight === "bold" ? "normal" : "bold",
     };
-    debounceUpdateTextBoxStyle(newStyle);
+    updateTextBoxStyle(newStyle);
   };
 
   const handleItalic = () => {
@@ -43,7 +45,7 @@ const Toolbar: React.FC = () => {
       fontStyle:
         textBoxFromStore.style.fontStyle === "italic" ? "normal" : "italic",
     };
-    debounceUpdateTextBoxStyle(newStyle);
+    updateTextBoxStyle(newStyle);
   };
 
   const handleAlignment = (alignment: CSSProperties["textAlign"]) => {
@@ -51,7 +53,7 @@ const Toolbar: React.FC = () => {
       ...textBoxFromStore.style,
       textAlign: alignment,
     };
-    debounceUpdateTextBoxStyle(newStyle);
+    updateTextBoxStyle(newStyle);
   };
 
   const handleColor = (e: ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +61,7 @@ const Toolbar: React.FC = () => {
       ...textBoxFromStore.style,
       color: e.target.value,
     };
-    debounceUpdateTextBoxStyle(newStyle);
+    throttledUpdateTextBoxStlye(newStyle);
   };
 
   return (

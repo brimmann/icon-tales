@@ -38,7 +38,6 @@ function CanvasDnd() {
       modifiers={[restrictToParentElement, scaleDragModifier]}
       sensors={[dragContorlSensor]}
       onDragStart={(e) => {
-        console.log("onDragStart");
         updateTextContent();
         setActiveTextBoxId(e.active.id);
       }}

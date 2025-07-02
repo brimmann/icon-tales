@@ -19,33 +19,7 @@ function TextBoxContent({ textBox }: TextBoxConentProps) {
     (state) => state.setActiveTextBoxId
   );
 
-  const prevDeps = useRef({ textBox, isEditing, activeTextBoxId });
-
-  useEffect(() => {
-    const currentDeps = { textBox, isEditing, activeTextBoxId };
-    const changedDeps: Record<string, { from: any; to: any }> = {};
-    (Object.keys(currentDeps) as (keyof typeof currentDeps)[]).forEach(
-      (key) => {
-        if (prevDeps.current[key] !== currentDeps[key]) {
-          changedDeps[key] = {
-            from: prevDeps.current[key],
-            to: currentDeps[key],
-          };
-        }
-      }
-    );
-
-    if (Object.keys(changedDeps).length) {
-      console.log("TextBoxContent re-render because of:", changedDeps);
-    }
-
-    prevDeps.current = currentDeps;
-  });
-
   const editableDivRef = useRef<HTMLDivElement>(null);
-  const renderCount = useRef(0);
-  console.log("Componet rendered: ", renderCount.current);
-  renderCount.current++;
 
   // const handleOnBlure = (e: FocusEvent<HTMLDivElement>) => {
   //   console.log("handleOnBlure");
@@ -62,7 +36,6 @@ function TextBoxContent({ textBox }: TextBoxConentProps) {
   };
 
   useEffect(() => {
-    console.log("isEditing changed", isEditing);
     const element = editableDivRef.current;
     if (element && activeTextBoxId === textBox.id) {
       element.focus();
