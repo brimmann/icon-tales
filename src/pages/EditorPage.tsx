@@ -14,6 +14,10 @@ function EditorPage() {
   const scale = useCanvasStore((state) => state.scale);
   const transformInit = useCanvasStore((state) => state.transformInit);
   const setTransformInit = useCanvasStore((state) => state.setTransformInit);
+  const setIsEditing = useCanvasStore((state) => state.setIsEditing);
+  const setActiveTextBoxId = useCanvasStore(
+    (state) => state.setActiveTextBoxId
+  );
 
   const setMinScale = useCanvasStore((state) => state.setMinScale);
   // const setActiveTextBoxId = useCanvasStore(
@@ -43,23 +47,10 @@ function EditorPage() {
     calculateScale();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(transofrmWrapperRef.current?.instance.transformState);
-  //   if (
-  //     scale &&
-  //     scale <= minScale.current &&
-  //     transformInit &&
-  //     transofrmWrapperRef.current
-  //   ) {
-  //     console.log("center");
-  //     transofrmWrapperRef.current.setTransform(0, 0, minScale.current);
-  //   }
-  // }, [scale, minScale]);
-
   useEffect(() => {
     if (transofrmWrapperRef.current && scale && transformInit) {
       const state = transofrmWrapperRef.current.instance.transformState;
-      console.log("scale", scale);
+
       transofrmWrapperRef.current.setTransform(
         state.positionX,
         state.positionY,
@@ -67,12 +58,6 @@ function EditorPage() {
         100
       );
       if (scale <= minScale.current) {
-        // transofrmWrapperRef.current.setTransform(
-        //   0,
-        //   0,
-        //   minScale.current,
-        //   undefined
-        // );
         const timeOut = setTimeout(() => {
           if (transofrmWrapperRef.current) {
             transofrmWrapperRef.current.centerView();
@@ -82,20 +67,8 @@ function EditorPage() {
           }
         }, 110);
       }
-
-      console.log("norm", state);
     }
   }, [scale]);
-
-  // useEffect(() => {
-  //   const timeOut = setTimeout(() => {
-  //     console.log(
-  //       "innnr state updated",
-  //       transofrmWrapperRef.current?.instance.transformState.scale
-  //     );
-  //     clearTimeout(timeOut);
-  //   }, 110);
-  // }, [transofrmWrapperRef.current?.instance.transformState.scale]);
 
   return (
     <div className="flex flex-col h-full lg:flex-row-reverse">
@@ -104,6 +77,14 @@ function EditorPage() {
           className="relative w-full flex-1 min-h-0"
           id="wrapper-wrapper"
           ref={wrapperWrapper}
+          onClick={(e) => {
+            console.log(e.target, e.currentTarget);
+            const target = e.target as HTMLDivElement;
+            if (!target.closest(".text-box") && !target.closest(".tool-bar")) {
+              setIsEditing(false);
+              setActiveTextBoxId(null);
+            }
+          }}
         >
           {scale !== null && (
             <TransformWrapper
