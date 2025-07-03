@@ -5,6 +5,9 @@ import type { TextBoxStyle } from "../../types";
 
 function TextBoxFormatingTools() {
   const textBoxFromStore = useCanvasStore((state) => state.getActiveTextBox());
+  const updateTextBoxWidth = useCanvasStore(
+    (state) => state.updateTextBoxWidth
+  );
 
   const updateTextBoxStyle = useCanvasStore(
     (state) => state.updateTextBoxStyle
@@ -63,6 +66,26 @@ function TextBoxFormatingTools() {
       color: e.target.value,
     };
     throttledUpdateTextBoxStlye(newStyle);
+  };
+
+  const handleFitContent = () => {
+    if (!textBoxFromStore) return;
+    const tempSpan = document.createElement("span");
+    tempSpan.style.position = "absolute";
+    tempSpan.style.visibility = "hidden";
+    tempSpan.style.whiteSpace = "pre";
+    tempSpan.style.fontSize = `${textBoxFromStore.style.fontSize}px`;
+    tempSpan.style.fontWeight =
+      textBoxFromStore.style.fontWeight?.toString() || "normal";
+    tempSpan.style.fontStyle =
+      textBoxFromStore.style.fontStyle?.toString() || "normal";
+
+    tempSpan.innerText = textBoxFromStore.content;
+    document.body.appendChild(tempSpan);
+    const width = tempSpan.scrollWidth + 3;
+    document.body.removeChild(tempSpan);
+
+    updateTextBoxWidth(width);
   };
 
   return (
@@ -171,6 +194,10 @@ function TextBoxFormatingTools() {
           className="w-8 h-8 rounded-md border border-gray-300 cursor-pointer"
         />
       </div>
+      <div className="divider divider-horizontal p-1"></div>
+      <button className="btn btn-ghost" onClick={handleFitContent}>
+        Fit
+      </button>
     </div>
   );
 }

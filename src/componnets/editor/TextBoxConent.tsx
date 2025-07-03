@@ -41,9 +41,9 @@ function TextBoxContent({ textBox }: TextBoxConentProps) {
     setTemporaryTextContent(e.currentTarget.innerText);
   };
 
-  // useEffect(() => {
-  //   setLocalWidth(textBox.transform.width);
-  // }, []);
+  useEffect(() => {
+    setLocalWidth(textBox.transform.width);
+  }, [textBox.transform.width]);
 
   useEffect(() => {
     const element = editableDivRef.current;
@@ -68,7 +68,6 @@ function TextBoxContent({ textBox }: TextBoxConentProps) {
       height={textBox.transform.height}
       onResizeStop={(_, { size }) => {
         updateTextBoxWidth(size.width);
-        setLocalWidth(size.width);
       }}
       onResize={(_, { size }) => {
         setLocalWidth(size.width);
