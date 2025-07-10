@@ -13,6 +13,7 @@ interface CanvasState {
   scale: number | null;
   minScale: number | null;
   transformInit: boolean;
+  setTextBoxes: (textBoxes: TextBoxEntity[]) => void;
   updateTextContent: () => void;
   updateTextBoxWidth: (width: number) => void;
   setTemporaryTextContent: (content: string) => void;
@@ -26,42 +27,7 @@ interface CanvasState {
   setTransformInit: (init: boolean) => void;
 }
 
-const initialTextBoxes: TextBoxEntity[] = [
-  {
-    id: 1,
-    content: "Click to edit text 1.",
-    transform: {
-      x: 0,
-      y: 0,
-      width: 200,
-      height: 60,
-    },
-    style: {
-      fontSize: 16,
-      fontWeight: "bold",
-      fontStyle: "normal",
-      textAlign: "left",
-      color: "#333333",
-    },
-  },
-  {
-    id: 2,
-    content: "Click to edit text 2.",
-    transform: {
-      x: 300,
-      y: 200,
-      width: 200,
-      height: 60,
-    },
-    style: {
-      fontSize: 16,
-      fontWeight: "bold",
-      fontStyle: "normal",
-      textAlign: "left",
-      color: "#333333",
-    },
-  },
-];
+const initialTextBoxes: TextBoxEntity[] = [];
 
 export const useCanvasStore = create<CanvasState>()(
   devtools(
@@ -74,6 +40,10 @@ export const useCanvasStore = create<CanvasState>()(
       scale: null,
       minScale: null,
       transformInit: false,
+      setTextBoxes: (textBoxes: TextBoxEntity[]) =>
+        set((state) => {
+          state.textBoxes = textBoxes;
+        }),
       updateTextContent: () =>
         set((state) => {
           if (!state.isEditing) return;

@@ -13,7 +13,7 @@ export const routes = createBrowserRouter([
     element: <TalesPage />,
   },
   {
-    path: "/editor",
+    path: "/editor/:id",
     element: <EditorPage />,
   },
 ]);

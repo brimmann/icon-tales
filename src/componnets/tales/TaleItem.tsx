@@ -1,13 +1,22 @@
+import { Link } from "react-router-dom";
+
 interface TaleItemProps {
-  tale: string;
+  taleId: number | undefined;
+  taleTitle: string;
 }
 
-function TaleItem({ tale }: TaleItemProps) {
+function TaleItem({ taleTitle, taleId }: TaleItemProps) {
   return (
     <div className="flex justify-between items-center">
-      <button className="btn btn-ghost flex-1">
+      {/* <button className="btn btn-ghost flex-1">
         <h1 className="text-left w-full">{tale}</h1>
-      </button>
+      </button> */}
+      <Link
+        className="btn btn-ghost flex-1 flex items-center justify-start"
+        to={`/editor/${taleId}`}
+      >
+        {taleTitle}
+      </Link>
       <button className="btn btn-ghost">
         <svg
           xmlns="http://www.w3.org/2000/svg"

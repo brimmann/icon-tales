@@ -6,6 +6,15 @@ export interface Tale {
   title: string;
   createdAt: Date;
   updatedAt: Date;
+  slides: Slide[];
+}
+
+export interface Slide {
+  id?: number;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
+  textBoxes: TextBoxEntity[];
 }
 
 export type TaleCreateData = Omit<Tale, "id" | "createdAt" | "updatedAt">;

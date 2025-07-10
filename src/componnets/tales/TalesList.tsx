@@ -1,22 +1,16 @@
-import { useEffect } from "react";
-import { useTaleStore } from "../../store/talesStore";
+import { useDataStore } from "../../store/dataStore";
 import TaleItem from "./TaleItem";
 
 function TalesList() {
-  const getTales = useTaleStore((state) => state.getTales);
-
-  useEffect(() => {
-    const loadData = async () => {
-      await getTales();
-    };
-    loadData();
-  }, [getTales]);
-
-  const tales = useTaleStore((state) => state.tales);
+  const talesMetaData = useDataStore((state) => state.talesMetaData);
   return (
     <div>
-      {tales.map((tale) => (
-        <TaleItem key={tale.id} tale={tale.title} />
+      {talesMetaData.map((taleMetaData) => (
+        <TaleItem
+          key={taleMetaData.id}
+          taleTitle={taleMetaData.title}
+          taleId={taleMetaData.id}
+        />
       ))}
     </div>
   );

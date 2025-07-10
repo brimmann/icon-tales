@@ -8,8 +8,11 @@ import SlidesBottomBar from "../componnets/editor/SlidesBottomBar";
 import Toolbar from "../componnets/editor/Toolbar";
 import { useEffect, useRef } from "react";
 import { useCanvasStore } from "../store/canvasStore";
+import { useParams } from "react-router-dom";
+import { useDataStore } from "../store/dataStore";
 
 function EditorPage() {
+  const { id } = useParams();
   const wrapperWrapper = useRef<HTMLDivElement | null>(null);
   const scale = useCanvasStore((state) => state.scale);
   const transformInit = useCanvasStore((state) => state.transformInit);
@@ -18,11 +21,9 @@ function EditorPage() {
   const setActiveTextBoxId = useCanvasStore(
     (state) => state.setActiveTextBoxId
   );
+  const getTaleById = useDataStore((state) => state.getTaleById);
 
   const setMinScale = useCanvasStore((state) => state.setMinScale);
-  // const setActiveTextBoxId = useCanvasStore(
-  //   (state) => state.setActiveTextBoxId
-  // );
 
   const setScale = useCanvasStore((state) => state.setScale);
 
@@ -44,6 +45,9 @@ function EditorPage() {
       }
     };
 
+    if (id !== undefined) {
+      getTaleById(parseInt(id));
+    }
     calculateScale();
   }, []);
 
@@ -120,7 +124,7 @@ function EditorPage() {
           )}
         </div>
       </div>
-      <div className="flex flex-col  ">
+      <div className="flex flex-col w-[300px]">
         <div className="mb-2 flex gap-2 items-center p-5">
           <h1 className="font-bold">Slides</h1>
           <button className="btn btn-primary text-sm">New +</button>
